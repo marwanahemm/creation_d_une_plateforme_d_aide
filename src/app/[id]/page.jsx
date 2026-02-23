@@ -1,4 +1,4 @@
-import tutoriels from "../../../data/tutoriels.json";
+import supabase from "@/lib/supabase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -14,14 +14,14 @@ const difficulteColors = {
   difficile: "bg-red-50 text-red-700 border border-red-200",
 };
 
-export async function generateStaticParams() {
-  return tutoriels.map((t) => ({ id: String(t.id) }));
-}
+export default async function TutorielDetailPage({ params }) {
+  const { data: tutoriel, error } = await supabase
+    .from("tutoriels")
+    .select("*")
+    .eq("id", params.id)
+    .single();
 
-export default function TutorielDetailPage({ params }) {
-  const tutoriel = tutoriels.find((t) => t.id === Number(params.id));
-
-  if (!tutoriel) notFound();
+  if (error || !tutoriel) notFound();
 
   const { titre, categorie, difficulte, duree, description, infos, etapes, lien } = tutoriel;
 
