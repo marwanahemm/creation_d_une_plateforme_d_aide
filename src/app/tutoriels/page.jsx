@@ -1,5 +1,5 @@
 import Link from "next/link";
-import supabase from "@/lib/supabase";
+import supabase from "@/lib/supabaseClient";
  
 export default async function TutorielsPage() {
   const { data: tutoriels, error } = await supabase
