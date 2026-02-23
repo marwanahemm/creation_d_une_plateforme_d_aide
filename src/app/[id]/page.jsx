@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient'
+import supabase from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Award, ExternalLink } from 'lucide-react'
 
