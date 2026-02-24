@@ -1,6 +1,8 @@
-import { supabase } from '@/lib/supabase'
+import supabase from '@/lib/supabaseClient'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Award, ExternalLink } from 'lucide-react'
+
+export const dynamic = 'force-dynamic'
 
 async function getTutoriel(id) {
   const { data, error } = await supabase
@@ -18,8 +20,8 @@ async function getTutoriel(id) {
 }
 
 export default async function TutorielDetail({ params }) {
-  const tutoriel = await getTutoriel(params.id)
-
+  const { id } = await params
+  const tutoriel = await getTutoriel(id)
   if (!tutoriel) {
     return (
       <div className="container mx-auto px-4 py-8">
