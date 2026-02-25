@@ -1,65 +1,101 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { BookOpen, Users, Shield, ArrowRight } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <div>
+      {/* Hero Section */}
+      <section className="bg-linear-to-br from-indigo-600 to-indigo-800 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-5xl font-bold mb-4">
+            Vos démarches administratives simplifiées
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl mb-8 opacity-90">
+            Des guides pas à pas pour vous accompagner dans vos démarches en ligne
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link 
+            href="/tutoriels" 
+            className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Voir les tutoriels <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
-      </main>
+      </section>
+
+      {/* Stats */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow text-center">
+              <BookOpen className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-gray-900 mb-2">3</div>
+              <div className="text-gray-600">Tutoriels disponibles</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow text-center">
+              <Users className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-gray-900 mb-2">3</div>
+              <div className="text-gray-600">Services couverts</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow text-center">
+              <Shield className="w-12 h-12 text-indigo-600 mx-auto mb-4" />
+              <div className="text-4xl font-bold text-gray-900 mb-2">100%</div>
+              <div className="text-gray-600">Gratuit</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services rapides */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Accès rapide aux services</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+
+            {/* Ameli - bleu */}
+            <Link href="/tutoriels" className="block bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+              <div className="w-16 h-16 mb-4 rounded-2xl bg-blue-500 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-9 h-9 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <path d="M2 10h20" />
+                  <path d="M6 15h4" />
+                  <path d="M14 15h4" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">Ameli</h3>
+              <p className="text-gray-600">Assurance maladie et remboursements</p>
+            </Link>
+
+            {/* CAF - vert */}
+            <Link href="/tutoriels" className="block bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+              <div className="w-16 h-16 mb-4 rounded-2xl bg-emerald-500 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-9 h-9 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="8" r="3" />
+                  <path d="M6 20v-1a6 6 0 0 1 12 0v1" />
+                  <path d="M17 8c1.5 0 3 .5 3 2s-1.5 2-3 2" strokeLinecap="round"/>
+                  <path d="M7 8c-1.5 0-3 .5-3 2s1.5 2 3 2" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">CAF</h3>
+              <p className="text-gray-600">Allocations familiales</p>
+            </Link>
+
+            {/* France Travail - orange */}
+            <Link href="/tutoriels" className="block bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+              <div className="w-16 h-16 mb-4 rounded-2xl bg-orange-500 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-9 h-9 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                  <path d="M12 12v4" strokeLinecap="round"/>
+                  <path d="M8 14h8" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-2">France Travail</h3>
+              <p className="text-gray-600">Emploi et allocations chômage</p>
+            </Link>
+
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
 }
