@@ -20,6 +20,7 @@ async function getTutoriel(id) {
 
 export default async function TutorielDetail({ params }) {
   const { id } = await params;
+  if (id === 'landing.html') return null
   const tutoriel = await getTutoriel(id);
 
   if (!tutoriel) {
