@@ -50,13 +50,12 @@ export default async function TutorielsPage() {
             <div className="w-1 h-7 rounded-sm" style={{ background: "linear-gradient(180deg, #000091 50%, #e1000f 50%)" }}></div>
             Démarches Admin
           </Link>
-          <Link
+          <a
             href="/"
-            className="inline-flex items-center gap-1.5 bg-[#000091] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#1212ff] transition-colors"
-          >
+            className="inline-flex items-center gap-1.5 bg-[#000091] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#1212ff] transition-colors">
             <ArrowLeft size={16} />
             Accueil
-          </Link>
+          </a>
         </div>
       </nav>
 

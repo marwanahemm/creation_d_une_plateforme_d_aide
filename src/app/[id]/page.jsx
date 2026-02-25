@@ -20,7 +20,7 @@ async function getTutoriel(id) {
 
 export default async function TutorielDetail({ params }) {
   const { id } = await params;
-  if (id === 'landing.html') return null
+  if (id === 'landing.html') return null;
   const tutoriel = await getTutoriel(id);
 
   if (!tutoriel) {
@@ -60,10 +60,10 @@ export default async function TutorielDetail({ params }) {
       {/* NAV */}
       <nav className="bg-white border-b border-[#dddddd]">
         <div className="max-w-270 mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
-          <Link href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
+          <a href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
             <div className="w-1 h-7 rounded-sm" style={{ background: "linear-gradient(180deg, #000091 50%, #e1000f 50%)" }}></div>
             Démarches Admin
-          </Link>
+          </a>
           <div className="flex gap-2.5 flex-wrap">
             <Link
               href="/tutoriels"
@@ -72,12 +72,12 @@ export default async function TutorielDetail({ params }) {
               <ArrowLeft size={16} />
               Tutoriels
             </Link>
-            <Link
+            <a
               href="/"
               className="inline-flex items-center gap-1.5 bg-[#000091] text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#1212ff] transition-colors"
             >
               Accueil
-            </Link>
+            </a>
           </div>
         </div>
       </nav>

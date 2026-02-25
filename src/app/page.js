@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
 
 export default function Home() {
-  redirect('/landing.html')
+  return (
+    <meta httpEquiv="refresh" content="0;url=/landing.html" />
+  )
 }
