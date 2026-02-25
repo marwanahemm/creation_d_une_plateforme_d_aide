@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Démarches Administratives — Vos démarches, enfin simples</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+
+  <!-- ═══════ NAVBAR ═══════ -->
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-bar"></div>
+        Démarches Administratives
+      </a>
+      <div class="nav-links">
+        <a href="#probleme" class="nav-link">Le constat</a>
+        <a href="#guides" class="nav-link">Les guides</a>
+        <a href="#comment" class="nav-link">Comment ça marche</a>
+        <a href="/tutoriels" class="nav-cta-btn">Accéder aux tutoriels →</a>
+      </div>
+      <div class="nav-burger" id="burger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#probleme" onclick="toggleMenu()">Le constat</a>
+    <a href="#guides" onclick="toggleMenu()">Les guides</a>
+    <a href="#comment" onclick="toggleMenu()">Comment ça marche</a>
+    <a href="/tutoriels" class="nav-cta-btn" style="text-align:center">Accéder aux tutoriels →</a>
+  </div>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag">
+          <div class="hero-tag-dot"></div>
+          Gratuit · Sans inscription · Accessible
+        </div>
+        <h1>Vos démarches<br />administratives,<br /><em>enfin simples.</em></h1>
+        <p class="hero-p">
+          CAF, Ameli, France Travail, impôts… Des guides pas à pas pour vous
+          accompagner de la préparation des documents jusqu'au site officiel.
+        </p>
+        <div class="hero-btns">
+          <a href="/tutoriels" class="btn-primary">Choisir ma démarche →</a>
+          <a href="#comment" class="btn-secondary">Comment ça marche</a>
+        </div>
+      </div>
+      <div class="hero-mockup">
+        <div class="mockup-bar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-url">demarches-admin.fr/tutoriels</div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-title">Vos guides disponibles</div>
+          <div class="mockup-item">
+            <span class="mockup-item-icon">🏥</span>
+            <div class="mockup-item-text">
+              <div class="mockup-item-name">Ameli — Assurance Maladie</div>
+              <div class="mockup-item-sub">Santé · 10 min</div>
+            </div>
+            <span class="mockup-pill pill-green">Facile</span>
+          </div>
+          <div class="mockup-item">
+            <span class="mockup-item-icon">👨‍👩‍👧</span>
+            <div class="mockup-item-text">
+              <div class="mockup-item-name">CAF — Allocations familiales</div>
+              <div class="mockup-item-sub">Famille · 15 min</div>
+            </div>
+            <span class="mockup-pill pill-orange">Moyen</span>
+          </div>
+          <div class="mockup-item">
+            <span class="mockup-item-icon">💼</span>
+            <div class="mockup-item-text">
+              <div class="mockup-item-name">France Travail — Emploi</div>
+              <div class="mockup-item-sub">Emploi · 20 min</div>
+            </div>
+            <span class="mockup-pill pill-orange">Moyen</span>
+          </div>
+            <span class="mockup-pill pill-blue">Guide</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+    <script src="landing.js"></script>
+  </body>
+</html>
