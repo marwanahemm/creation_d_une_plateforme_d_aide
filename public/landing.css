@@ -285,3 +285,22 @@
       font-size: 1.05rem; color: var(--gris-mention);
       max-width: 600px; margin-bottom: 48px;
     }
+/* ══════════════════════════════════════════════
+   BARRE DE PREUVES
+══════════════════════════════════════════════ */
+.proof-bar {
+  background: var(--blanc);
+  border-bottom: 1px solid var(--gris-bordure);
+  padding: 28px var(--px);
+}
+.proof-inner {
+  max-width: var(--max-w); margin: 0 auto;
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+}
+.proof-item {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 12px 48px; border-right: 1px solid var(--gris-bordure);
+}
+.proof-item:last-child { border-right: none; }
+.proof-num { font-family: var(--font-titre); font-size: 2.2rem; font-weight: 800; color: var(--bleu-france); line-height: 1; }
+.proof-label { font-size: 12px; color: var(--gris-mention); margin-top: 4px; }
