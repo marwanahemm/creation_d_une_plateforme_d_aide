@@ -20,6 +20,9 @@ Plateforme d'aide permettant aux usagers d'effectuer leurs démarches administra
 - **CSS3** : Stylisation et mise en page responsive
 - **JavaScript ES6+** : Logique et interactivité de l'application
 - **Tailwind CSS 4.1.18** : Fourniture de classes utilitaires réutilisables qui rendent le style rapide et efficace
+- **Vercel** : Hébergement d'applications web modernes
+- **Supabase** : Outil Open Source permettant aux développeurs d'accéder à une base de données
+
 
 ## 📖 Sources officielles
 
