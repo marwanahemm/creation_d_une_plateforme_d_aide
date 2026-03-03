@@ -11,346 +11,395 @@
 </head>
 <body>
 
+
   <!-- ═══════ NAVBAR ═══════ -->
+
   <nav class="nav" id="navbar">
-    <div class="nav-inner">
+    <header class="nav-inner">
       <a href="#" class="nav-logo">
-        <div class="nav-logo-bar"></div>
+        <span class="nav-logo-bar"></span>
         Démarches Administratives
       </a>
-      <div class="nav-links">
-        <a href="#probleme" class="nav-link">Le constat</a>
-        <a href="#guides" class="nav-link">Les guides</a>
-        <a href="#comment" class="nav-link">Comment ça marche</a>
-        <a href="#confiance" class="nav-link">Confiance</a>
-        <a href="/tutoriels" class="nav-cta-btn">Accéder aux tutoriels →</a>
-      </div>
-      <div class="nav-burger" id="burger" onclick="toggleMenu()">
+
+      <ul class="nav-links">
+        <li><a href="#probleme" class="nav-link">Le constat</a></li>
+        <li><a href="#guides" class="nav-link">Les guides</a></li>
+        <li><a href="#comment" class="nav-link">Comment ça marche</a></li>
+        <li><a href="#confiance" class="nav-link">Confiance</a></li>
+        <li><a href="/tutoriels" class="nav-cta-btn">Accéder aux tutoriels →</a></li>
+      </ul>
+
+      <button class="nav-burger" id="burger" onclick="toggleMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
-      </div>
-    </div>
+      </button>
+    </header>
   </nav>
-  <div class="nav-mobile" id="navMobile">
-    <a href="#probleme" onclick="toggleMenu()">Le constat</a>
-    <a href="#guides" onclick="toggleMenu()">Les guides</a>
-    <a href="#comment" onclick="toggleMenu()">Comment ça marche</a>
-    <a href="#confiance" onclick="toggleMenu()">Confiance</a>
-    <a href="/tutoriels" class="nav-cta-btn" style="text-align:center">Accéder aux tutoriels →</a>
-  </div>
 
-  <!-- ═══════ HERO ═══════ -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div>
-        <div class="hero-tag">
-          <div class="hero-tag-dot"></div>
-          Gratuit · Sans inscription · Accessible
-        </div>
-        <h1>Vos démarches<br />administratives,<br /><em>enfin simples.</em></h1>
-        <p class="hero-p">
-          CAF, Ameli, France Travail, impôts… Des guides pas à pas pour vous
-          accompagner de la préparation des documents jusqu'au site officiel.
+  <ul class="nav-mobile" id="navMobile">
+    <li><a href="#probleme" onclick="toggleMenu()">Le constat</a></li>
+    <li><a href="#guides" onclick="toggleMenu()">Les guides</a></li>
+    <li><a href="#comment" onclick="toggleMenu()">Comment ça marche</a></li>
+    <li><a href="#confiance" onclick="toggleMenu()">Confiance</a></li>
+    <li><a href="/tutoriels" class="nav-cta-btn" style="text-align:center">Accéder aux tutoriels →</a></li>
+  </ul>
+
+
+  <main>
+
+
+    <!-- ═══════ HERO ═══════ -->
+
+    <section class="hero">
+      <article class="hero-inner">
+
+        <header>
+          <p class="hero-tag">
+            <span class="hero-tag-dot"></span>
+            Gratuit · Sans inscription · Accessible
+          </p>
+
+          <h1>Vos démarches<br />administratives,<br /><em>enfin simples.</em></h1>
+
+          <p class="hero-p">
+            CAF, Ameli, France Travail, impôts… Des guides pas à pas pour vous
+            accompagner de la préparation des documents jusqu'au site officiel.
+          </p>
+
+          <nav class="hero-btns">
+            <a href="/tutoriels" class="btn-primary">Choisir ma démarche →</a>
+            <a href="#comment" class="btn-secondary">Comment ça marche</a>
+          </nav>
+        </header>
+
+        <figure class="hero-mockup">
+          <figcaption class="mockup-bar">
+            <span class="mockup-dot"></span>
+            <span class="mockup-dot"></span>
+            <span class="mockup-dot"></span>
+            <span class="mockup-url">demarches-admin.fr/tutoriels</span>
+          </figcaption>
+
+          <ul class="mockup-body">
+            <li class="mockup-title">Vos guides disponibles</li>
+
+            <li class="mockup-item">
+              <span class="mockup-item-icon icon-red">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+              </span>
+              <span class="mockup-item-text">
+                <strong class="mockup-item-name">Ameli — Assurance Maladie</strong>
+                <small class="mockup-item-sub">Santé · 10 min</small>
+              </span>
+              <mark class="mockup-pill pill-green">Facile</mark>
+            </li>
+
+            <li class="mockup-item">
+              <span class="mockup-item-icon icon-amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+              </span>
+              <span class="mockup-item-text">
+                <strong class="mockup-item-name">CAF — Allocations familiales</strong>
+                <small class="mockup-item-sub">Famille · 15 min</small>
+              </span>
+              <mark class="mockup-pill pill-orange">Moyen</mark>
+            </li>
+
+            <li class="mockup-item">
+              <span class="mockup-item-icon icon-indigo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              </span>
+              <span class="mockup-item-text">
+                <strong class="mockup-item-name">France Travail — Emploi</strong>
+                <small class="mockup-item-sub">Emploi · 20 min</small>
+              </span>
+              <mark class="mockup-pill pill-orange">Moyen</mark>
+            </li>
+          </ul>
+        </figure>
+
+      </article>
+    </section>
+
+
+    <!-- ═══════ BARRE DE PREUVES ═══════ -->
+
+    <aside class="proof">
+      <ul class="proof-inner">
+        <li class="proof-item">
+          <strong class="proof-num">6</strong>
+          <span class="proof-label">Guides disponibles</span>
+        </li>
+        <li class="proof-item">
+          <strong class="proof-num">6</strong>
+          <span class="proof-label">Organismes couverts</span>
+        </li>
+        <li class="proof-item">
+          <strong class="proof-num">0 €</strong>
+          <span class="proof-label">Coût pour l'utilisateur</span>
+        </li>
+        <li class="proof-item">
+          <strong class="proof-num">0</strong>
+          <span class="proof-label">Donnée collectée</span>
+        </li>
+      </ul>
+    </aside>
+
+
+    <!-- ═══════ LE PROBLÈME ═══════ -->
+
+    <section class="section section--alt" id="probleme">
+      <header class="section-inner">
+        <span class="section-label">Le constat</span>
+        <h2 class="section-h2">Les démarches en ligne,<br /><em>un parcours du combattant.</em></h2>
+        <p class="section-lead">
+          Les portails officiels sont indispensables mais rarement conçus pour être simples à utiliser.
         </p>
-        <div class="hero-btns">
-          <a href="/tutoriels" class="btn-primary">Choisir ma démarche →</a>
-          <a href="#comment" class="btn-secondary">Comment ça marche</a>
-        </div>
-      </div>
-      <div class="hero-mockup">
-        <div class="mockup-bar">
-          <div class="mockup-dot"></div>
-          <div class="mockup-dot"></div>
-          <div class="mockup-dot"></div>
-          <div class="mockup-url">demarches-admin.fr/tutoriels</div>
-        </div>
-        <div class="mockup-body">
-          <div class="mockup-title">Vos guides disponibles</div>
-          <div class="mockup-item">
-            <div class="mockup-item-icon icon-red">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-            </div>
-            <div class="mockup-item-text">
-              <div class="mockup-item-name">Ameli — Assurance Maladie</div>
-              <div class="mockup-item-sub">Santé · 10 min</div>
-            </div>
-            <span class="mockup-pill pill-green">Facile</span>
-          </div>
-          <div class="mockup-item">
-            <div class="mockup-item-icon icon-amber">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-            </div>
-            <div class="mockup-item-text">
-              <div class="mockup-item-name">CAF — Allocations familiales</div>
-              <div class="mockup-item-sub">Famille · 15 min</div>
-            </div>
-            <span class="mockup-pill pill-orange">Moyen</span>
-          </div>
-          <div class="mockup-item">
-            <div class="mockup-item-icon icon-indigo">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-            </div>
-            <div class="mockup-item-text">
-              <div class="mockup-item-name">France Travail — Emploi</div>
-              <div class="mockup-item-sub">Emploi · 20 min</div>
-            </div>
-            <span class="mockup-pill pill-orange">Moyen</span>
-          </div>
-          <div class="mockup-item">
-            <div class="mockup-item-icon icon-blue">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      </header>
 
-  <!-- ═══════ BARRE DE PREUVES ═══════ -->
-  <div class="proof">
-    <div class="proof-inner">
-      <div class="proof-item">
-        <span class="proof-num">6</span>
-        <span class="proof-label">Guides disponibles</span>
-      </div>
-      <div class="proof-item">
-        <span class="proof-num">6</span>
-        <span class="proof-label">Organismes couverts</span>
-      </div>
-      <div class="proof-item">
-        <span class="proof-num">0 €</span>
-        <span class="proof-label">Coût pour l'utilisateur</span>
-      </div>
-      <div class="proof-item">
-        <span class="proof-num">0</span>
-        <span class="proof-label">Donnée collectée</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ LE PROBLÈME ═══════ -->
-  <section class="section section--alt" id="probleme">
-    <div class="section-inner">
-      <span class="section-label">Le constat</span>
-      <h2 class="section-h2">Les démarches en ligne,<br /><em>un parcours du combattant.</em></h2>
-      <p class="section-lead">
-        Les portails officiels sont indispensables mais rarement conçus pour être simples à utiliser.
-      </p>
-      <div class="problem-grid">
-        <div class="problem-card">
-          <div class="problem-icon">
+      <ul class="problem-grid section-inner">
+        <li class="problem-card">
+          <span class="problem-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          </div>
+          </span>
           <h3>Interfaces complexes</h3>
           <p>Les portails comme Ameli ou CAF sont rarement conçus pour être simples à utiliser.</p>
-        </div>
-        <div class="problem-card">
-          <div class="problem-icon">
+        </li>
+
+        <li class="problem-card">
+          <span class="problem-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-          </div>
+          </span>
           <h3>Documents à prévoir</h3>
           <p>On ne sait pas quels justificatifs préparer. On se retrouve bloqué en pleine démarche.</p>
-        </div>
-        <div class="problem-card">
-          <div class="problem-icon">
+        </li>
+
+        <li class="problem-card">
+          <span class="problem-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          </div>
+          </span>
           <h3>Étapes peu claires</h3>
           <p>Le processus n'est pas toujours bien indiqué, ce qui pousse à recommencer plusieurs fois.</p>
-        </div>
-        <div class="problem-card">
-          <div class="problem-icon">
+        </li>
+
+        <li class="problem-card">
+          <span class="problem-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
+          </span>
           <h3>Temps perdu</h3>
           <p>Une information manquante oblige à tout reprendre depuis le début.</p>
-        </div>
-      </div>
-      <div class="solution-box">
-        <div>
+        </li>
+      </ul>
+
+      <article class="solution-box section-inner">
+        <header>
           <h3>Notre réponse : des guides clairs, étape par étape.</h3>
           <p>Chaque guide indique d'abord ce qu'il faut préparer, puis déroule les étapes dans l'ordre, et finit par un lien vers le site officiel.</p>
-        </div>
+        </header>
         <a href="/tutoriels" class="btn-primary">Voir les guides →</a>
-      </div>
-    </div>
-  </section>
+      </article>
+    </section>
 
-  <!-- ═══════ LES GUIDES ═══════ -->
-  <section class="section" id="guides">
-    <div class="section-inner">
-      <div class="guides-header">
-        <div>
+
+    <!-- ═══════ LES GUIDES ═══════ -->
+
+    <section class="section" id="guides">
+      <header class="section-inner guides-header">
+        <hgroup>
           <span class="section-label">Les tutoriels</span>
           <h2 class="section-h2">Quelle démarche<br /><em>vous concerne ?</em></h2>
-        </div>
+        </hgroup>
         <a href="/tutoriels" class="guides-link">Voir tous les guides →</a>
-      </div>
-      <div class="guides-grid">
+      </header>
 
-        <a href="/tutoriels" class="guide-card">
-          <div class="guide-icon-wrap icon-red">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </div>
-          <div class="guide-cat">Santé</div>
-          <h3>Ameli — Assurance Maladie</h3>
-          <p>Créez votre compte Ameli, suivez vos remboursements et téléchargez vos attestations.</p>
-          <div class="guide-meta">
-            <span class="guide-badge badge-deb">Débutant</span>
-            <span class="guide-badge badge-time">10 min</span>
-          </div>
-          <span class="guide-go">Commencer →</span>
-        </a>
+      <ul class="guides-grid section-inner">
 
-        <a href="/tutoriels" class="guide-card">
-          <div class="guide-icon-wrap icon-amber">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-          </div>
-          <div class="guide-cat">Famille</div>
-          <h3>CAF — Allocations Familiales</h3>
-          <p>Accédez à vos droits, déclarez vos ressources et gérez vos allocations en ligne.</p>
-          <div class="guide-meta">
-            <span class="guide-badge badge-int">Intermédiaire</span>
-            <span class="guide-badge badge-time">15 min</span>
-          </div>
-          <span class="guide-go">Commencer →</span>
-        </a>
+        <li>
+          <a href="/tutoriels" class="guide-card">
+            <span class="guide-icon-wrap icon-red">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </span>
+            <span class="guide-cat">Santé</span>
+            <h3>Ameli — Assurance Maladie</h3>
+            <p>Créez votre compte Ameli, suivez vos remboursements et téléchargez vos attestations.</p>
+            <footer class="guide-meta">
+              <mark class="guide-badge badge-deb">Débutant</mark>
+              <mark class="guide-badge badge-time">10 min</mark>
+            </footer>
+            <span class="guide-go">Commencer →</span>
+          </a>
+        </li>
 
-        <a href="/tutoriels" class="guide-card">
-          <div class="guide-icon-wrap icon-indigo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-          </div>
-          <div class="guide-cat">Emploi</div>
-          <h3>France Travail — Emploi</h3>
-          <p>Inscrivez-vous, actualisez votre situation et accédez à vos droits chômage.</p>
-          <div class="guide-meta">
-            <span class="guide-badge badge-int">Intermédiaire</span>
-            <span class="guide-badge badge-time">20 min</span>
-          </div>
-          <span class="guide-go">Commencer →</span>
-        </a>
-      </div>
-    </div>
-  </section>
+        <li>
+          <a href="/tutoriels" class="guide-card">
+            <span class="guide-icon-wrap icon-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+            </span>
+            <span class="guide-cat">Famille</span>
+            <h3>CAF — Allocations Familiales</h3>
+            <p>Accédez à vos droits, déclarez vos ressources et gérez vos allocations en ligne.</p>
+            <footer class="guide-meta">
+              <mark class="guide-badge badge-int">Intermédiaire</mark>
+              <mark class="guide-badge badge-time">15 min</mark>
+            </footer>
+            <span class="guide-go">Commencer →</span>
+          </a>
+        </li>
 
-  <!-- ═══════ COMMENT ÇA MARCHE ═══════ -->
-  <section class="section" id="comment">
-    <div class="section-inner">
-      <span class="section-label">Fonctionnement</span>
-      <h2 class="section-h2">De zéro au site officiel,<br /><em>en 4 étapes.</em></h2>
-      <p class="section-lead">Aucune inscription, aucune donnée collectée. Choisissez et avancez à votre rythme.</p>
-      <div class="steps">
+        <li>
+          <a href="/tutoriels" class="guide-card">
+            <span class="guide-icon-wrap icon-indigo">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            </span>
+            <span class="guide-cat">Emploi</span>
+            <h3>France Travail — Emploi</h3>
+            <p>Inscrivez-vous, actualisez votre situation et accédez à vos droits chômage.</p>
+            <footer class="guide-meta">
+              <mark class="guide-badge badge-int">Intermédiaire</mark>
+              <mark class="guide-badge badge-time">20 min</mark>
+            </footer>
+            <span class="guide-go">Commencer →</span>
+          </a>
+        </li>
 
-        <div class="step-card">
-          <div class="step-header">
-            <div class="step-num">1</div>
-            <div class="step-icon-wrap">
+      </ul>
+    </section>
+
+
+    <!-- ═══════ COMMENT ÇA MARCHE ═══════ -->
+
+    <section class="section" id="comment">
+      <header class="section-inner">
+        <span class="section-label">Fonctionnement</span>
+        <h2 class="section-h2">De zéro au site officiel,<br /><em>en 4 étapes.</em></h2>
+        <p class="section-lead">Aucune inscription, aucune donnée collectée. Choisissez et avancez à votre rythme.</p>
+      </header>
+
+      <ol class="steps section-inner">
+
+        <li class="step-card">
+          <header class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </div>
-          </div>
+            </span>
+          </header>
           <h3>Choisissez un guide</h3>
           <p>Parcourez les guides et sélectionnez la démarche qui vous concerne.</p>
-        </div>
+        </li>
 
-        <div class="step-card">
-          <div class="step-header">
-            <div class="step-num">2</div>
-            <div class="step-icon-wrap">
+        <li class="step-card">
+          <header class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13h4"/><path d="M10 17h4"/></svg>
-            </div>
-          </div>
+            </span>
+          </header>
           <h3>Préparez vos documents</h3>
           <p>Chaque guide commence par la liste des informations à avoir sous la main.</p>
-        </div>
+        </li>
 
-        <div class="step-card">
-          <div class="step-header">
-            <div class="step-num">3</div>
-            <div class="step-icon-wrap">
+        <li class="step-card">
+          <header class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-          </div>
+            </span>
+          </header>
           <h3>Suivez les étapes</h3>
           <p>Avancez pas à pas et cochez chaque action au fur et à mesure.</p>
-        </div>
+        </li>
 
-        <div class="step-card">
-          <div class="step-header">
-            <div class="step-num">4</div>
-            <div class="step-icon-wrap">
+        <li class="step-card">
+          <header class="step-header">
+            <span class="step-num">4</span>
+            <span class="step-icon-wrap">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            </div>
-          </div>
+            </span>
+          </header>
           <h3>Accédez au site officiel</h3>
           <p>Un lien direct vous amène sur la plateforme officielle pour finaliser.</p>
-        </div>
+        </li>
 
-      </div>
-    </div>
-  </section>
+      </ol>
+    </section>
 
-  <!-- ═══════ CONFIANCE ═══════ -->
-  <section class="section" id="confiance">
-    <div class="section-inner">
-      <span class="section-label">Pourquoi faire confiance à cette plateforme</span>
-      <h2 class="section-h2">Une plateforme pensée<br /><em>pour tous les citoyens.</em></h2>
-      <p class="section-lead">Que vous soyez à l'aise ou non avec le numérique, cette plateforme est faite pour vous.</p>
-      <div class="trust-grid">
 
-        <div class="trust-card">
-          <div class="trust-icon icon-blue">
+    <!-- ═══════ CONFIANCE ═══════ -->
+
+    <section class="section" id="confiance">
+      <header class="section-inner">
+        <span class="section-label">Pourquoi faire confiance à cette plateforme</span>
+        <h2 class="section-h2">Une plateforme pensée<br /><em>pour tous les citoyens.</em></h2>
+        <p class="section-lead">Que vous soyez à l'aise ou non avec le numérique, cette plateforme est faite pour vous.</p>
+      </header>
+
+      <ul class="trust-grid section-inner">
+
+        <li class="trust-card">
+          <span class="trust-icon icon-blue">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-          </div>
+          </span>
           <h3>Contenu vérifié</h3>
           <p>Chaque guide est basé sur les procédures officielles des organismes concernés : Ameli, CAF, France Travail.</p>
-        </div>
+        </li>
 
-        <div class="trust-card">
-          <div class="trust-icon icon-green">
+        <li class="trust-card">
+          <span class="trust-icon icon-green">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-          </div>
+          </span>
           <h3>100 % gratuit</h3>
           <p>Aucun abonnement, aucune inscription, aucune donnée personnelle collectée. Accès libre et immédiat.</p>
-        </div>
+        </li>
 
-        <div class="trust-card">
-          <div class="trust-icon icon-indigo">
+        <li class="trust-card">
+          <span class="trust-icon icon-indigo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-          </div>
+          </span>
           <h3>Accessible à tous</h3>
-          <p>Conçu pour être simple même pour les personnes peu à l'aise avec le numérique ou les démarches administratives. Lisible sur tous les écrans.</p>
-        </div>
+          <p>Conçu pour être simple même pour les personnes peu à l'aise avec le numérique. Lisible sur tous les écrans.</p>
+        </li>
 
-        <div class="trust-card">
-          <div class="trust-icon icon-amber">
+        <li class="trust-card">
+          <span class="trust-icon icon-amber">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          </div>
+          </span>
           <h3>Liens officiels uniquement</h3>
           <p>Chaque guide renvoie vers les sites gouvernementaux officiels.</p>
-        </div>
-        
-      </div>
-    </div>
-  </section>
-  <!-- ═══════ CTA FINAL ═══════ -->
-  <section class="cta-final">
-    <h2>Prêt à simplifier<br />votre démarche ?</h2>
-    <p>Choisissez un guide et commencez maintenant. C'est gratuit, sans compte, sans engagement.</p>
-    <a href="/tutoriels" class="cta-final-btn">Accéder aux guides →</a>
-  </section>
+        </li>
+
+      </ul>
+    </section>
+
+
+    <!-- ═══════ CTA FINAL ═══════ -->
+
+    <section class="cta-final">
+      <h2>Prêt à simplifier<br />votre démarche ?</h2>
+      <p>Choisissez un guide et commencez maintenant. C'est gratuit, sans compte, sans engagement.</p>
+      <a href="/tutoriels" class="cta-final-btn">Accéder aux guides →</a>
+    </section>
+
+
+  </main>
+
 
   <!-- ═══════ FOOTER ═══════ -->
+
   <footer class="footer">
-    <div class="footer-logo">
-      <div class="footer-bar"></div>
+    <strong class="footer-logo">
+      <span class="footer-bar"></span>
       Démarches Admin
-    </div>
-    <div class="footer-links">
+    </strong>
+
+    <nav class="footer-links">
       <a href="https://www.service-public.fr" target="_blank">Service-Public.fr</a>
       <a href="https://www.cnil.fr" target="_blank">CNIL</a>
       <a href="https://www.ameli.fr" target="_blank">Ameli</a>
-    </div>
-    <div class="footer-copy">© 2026 — Projet Titre Professionnel Bac+2</div>
+    </nav>
+
+    <small class="footer-copy">© 2026 — Projet Titre Professionnel Bac+2</small>
   </footer>
-    <script src="landing.js"></script>
-  </body>
+
+  <script src="landing.js"></script>
+</body>
 </html>
