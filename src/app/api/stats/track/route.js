@@ -14,6 +14,7 @@ export async function POST(request) {
     }
 
     // Toujours incrémenter les pages vues
+    
     await supabaseAdmin.rpc("increment_stats", {
       compteur: "pages_vues",
       n: 1,

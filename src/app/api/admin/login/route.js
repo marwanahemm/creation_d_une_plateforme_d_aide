@@ -4,6 +4,7 @@ export async function POST(request) {
   const { password } = await request.json();
 
   // Mot de passe stocké côté serveur dans les variables d'environnement
+
   const adminPassword = process.env.ADMIN_PASSWORD;
 
   if (!adminPassword) {
@@ -20,12 +21,16 @@ export async function POST(request) {
     );
   }
 
+
   // Créer un token simple (en production, utiliser JWT)
+
   const token = Buffer.from(`admin:${Date.now()}`).toString("base64");
 
   const response = NextResponse.json({ success: true });
 
+
   // Stocker le token dans un cookie httpOnly (inaccessible en JS côté client)
+  
   response.cookies.set("admin_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

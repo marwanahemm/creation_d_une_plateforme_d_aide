@@ -24,7 +24,9 @@ export default function AdminPage() {
     etapes: "",
   });
 
+
   // ═══ VÉRIFIER LA SESSION AU CHARGEMENT ═══
+
   useEffect(() => {
     fetch("/api/admin/session")
       .then((res) => {
@@ -33,7 +35,9 @@ export default function AdminPage() {
       .finally(() => setChecking(false));
   }, []);
 
+
   // ═══ LOGIN (vérifié côté serveur) ═══
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -53,14 +57,18 @@ export default function AdminPage() {
     }
   };
 
+
   // ═══ LOGOUT ═══
+
   const handleLogout = async () => {
     await fetch("/api/admin/session", { method: "DELETE" });
     setIsLogged(false);
     setTutoriels([]);
   };
 
+
   // ═══ FETCH TUTORIELS ═══
+
   const fetchTutoriels = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -71,11 +79,14 @@ export default function AdminPage() {
     setLoading(false);
   };
 
+
   useEffect(() => {
     if (isLogged) fetchTutoriels();
   }, [isLogged]);
 
+
   // ═══ DELETE ═══
+
   const handleDelete = async (id, titre) => {
     if (!confirm(`Supprimer "${titre}" ?`)) return;
     const { error } = await supabase.from("tutoriels").delete().eq("id", id);
@@ -84,7 +95,9 @@ export default function AdminPage() {
     }
   };
 
+
   // ═══ ADD ═══
+
   const handleAdd = async (e) => {
     e.preventDefault();
 
@@ -106,6 +119,7 @@ export default function AdminPage() {
           };
         });
     }
+
 
     const { error } = await supabase.from("tutoriels").insert({
       titre: form.titre,
@@ -134,7 +148,9 @@ export default function AdminPage() {
     }
   };
 
+
   // ═══ CHARGEMENT ═══
+
   if (checking) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f9fafb", fontFamily: "system-ui, sans-serif" }}>
@@ -144,6 +160,7 @@ export default function AdminPage() {
   }
 
   // ═══ PAGE DE CONNEXION ═══
+
   if (!isLogged) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f9fafb", fontFamily: "system-ui, sans-serif" }}>
@@ -176,7 +193,9 @@ export default function AdminPage() {
     );
   }
 
+
   // ═══ DASHBOARD ═══
+
   return (
     <div style={{ minHeight: "100vh", background: "#f9fafb", fontFamily: "system-ui, sans-serif" }}>
       {/* Header */}
@@ -191,6 +210,7 @@ export default function AdminPage() {
 
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 24px" }}>
         {/* Actions */}
+
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <p style={{ fontSize: ".95rem", color: "#666", margin: 0 }}>
             {tutoriels.length} tutoriel{tutoriels.length > 1 ? "s" : ""}
@@ -201,6 +221,7 @@ export default function AdminPage() {
         </div>
 
         {/* Formulaire d'ajout */}
+
         {showForm && (
           <form onSubmit={handleAdd} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "28px", marginBottom: "24px" }}>
             <h2 style={{ fontSize: "1.1rem", fontWeight: "700", color: "#161616", marginBottom: "20px" }}>Nouveau tutoriel</h2>
@@ -254,6 +275,7 @@ export default function AdminPage() {
         )}
 
         {/* Liste */}
+
         {loading ? (
           <p style={{ color: "#666", textAlign: "center", padding: "40px" }}>Chargement...</p>
         ) : (
@@ -278,6 +300,7 @@ export default function AdminPage() {
   );
 }
 
+
 const labelStyle = {
   display: "block",
   fontSize: ".82rem",
@@ -285,6 +308,7 @@ const labelStyle = {
   color: "#3a3a3a",
   marginBottom: "4px",
 };
+
 
 const inputStyle = {
   width: "100%",

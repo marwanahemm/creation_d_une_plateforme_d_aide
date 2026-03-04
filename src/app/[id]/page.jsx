@@ -1,8 +1,19 @@
 import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
-import { ArrowLeft, Clock, Award, ExternalLink, HeartPulse, Baby, Briefcase, FileText, ShieldCheck, Info } from "lucide-react";
+import { ArrowLeft, 
+  Clock, 
+  Award, 
+  ExternalLink, 
+  HeartPulse, 
+  Baby, 
+  Briefcase, 
+  FileText, 
+  ShieldCheck, 
+  Info 
+} from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
 
 async function getTutoriel(id) {
   const { data, error } = await supabase
@@ -37,6 +48,7 @@ export default async function TutorielDetail({ params }) {
     Sécurité: <ShieldCheck size={40} />,
   };
 
+
   const iconBgMap = {
     Santé: "bg-white/15 text-white",
     Famille: "bg-white/15 text-white",
@@ -44,6 +56,7 @@ export default async function TutorielDetail({ params }) {
     Fiscalité: "bg-white/15 text-white",
     Sécurité: "bg-white/15 text-white",
   };
+
 
   const getDiffColor = (d) => {
     switch (d) {
@@ -58,6 +71,7 @@ export default async function TutorielDetail({ params }) {
     <div className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', Arial, sans-serif" }}>
 
       {/* NAV */}
+
       <nav className="bg-white border-b border-[#dddddd]">
         <div className="max-w-270 mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
           <a href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
@@ -83,6 +97,7 @@ export default async function TutorielDetail({ params }) {
       </nav>
 
       {/* HERO */}
+
       <div className="bg-[#000091] text-white py-12 px-6">
         <div className="max-w-190 mx-auto">
           <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${iconBgMap[tutoriel.categorie] || "bg-white/15 text-white"}`}>
@@ -107,11 +122,13 @@ export default async function TutorielDetail({ params }) {
       </div>
 
       {/* CONTENU */}
+
       <div className="max-w-190 mx-auto px-6 py-10">
         {/* Description */}
         <p className="text-lg text-[#3a3a3a] leading-relaxed mb-8">{tutoriel.description}</p>
 
         {/* Infos utiles */}
+
         {tutoriel.infos && tutoriel.infos.length > 0 && (
           <div className="bg-[#f5f5fe] border-l-4 border-[#000091] rounded-r-lg p-5 mb-10">
             <h3 className="font-extrabold text-[#000091] mb-3 flex items-center gap-2">
@@ -128,7 +145,9 @@ export default async function TutorielDetail({ params }) {
           </div>
         )}
 
+
         {/* Étapes */}
+
         {tutoriel.etapes && tutoriel.etapes.length > 0 && (
           <>
             <h2 className="text-2xl font-black text-[#161616] mb-6">Étapes à suivre</h2>
@@ -147,6 +166,7 @@ export default async function TutorielDetail({ params }) {
         )}
 
         {/* Lien officiel */}
+
         {tutoriel.lien && (
           <div className="bg-[#000091] rounded-lg p-7 mt-10 flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -157,8 +177,7 @@ export default async function TutorielDetail({ params }) {
               href={tutoriel.lien}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white text-[#000091] px-6 py-3 rounded-lg text-sm font-extrabold hover:shadow-lg hover:-translate-y-0.5 transition-all"
-            >
+              className="inline-flex items-center gap-2 bg-white text-[#000091] px-6 py-3 rounded-lg text-sm font-extrabold hover:shadow-lg hover:-translate-y-0.5 transition-all">
               <ExternalLink size={16} />
               Ouvrir le site
             </a>

@@ -9,6 +9,8 @@ INSERT INTO tutoriels (titre, categorie, difficulte, duree, description, infos, 
   '[{"titre": "Aller sur ameli.fr", "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse"}, {"titre": "Cliquer sur ''Créer mon compte''", "description": "Sur la page d''accueil, cliquez sur le bouton ''Mon compte'' en haut à droite, puis ''Créer mon compte''"}, {"titre": "Renseigner votre numéro de sécurité sociale", "description": "Saisissez vos 15 chiffres inscrits sur votre carte Vitale. Vérifiez bien chaque chiffre avant de valider"}, {"titre": "Valider votre identité", "description": "Vous recevrez un code d''activation par courrier (2 à 5 jours) ou par SMS. Entrez ce code sur le site pour activer votre compte"}, {"titre": "Créer votre mot de passe", "description": "Choisissez un mot de passe sécurisé d''au moins 8 caractères avec majuscule, chiffre et caractère spécial"}]',
   'https://www.ameli.fr'
 ),
+
+
 (
   'CAF - Allocations Familiales',
   'Famille',
@@ -19,6 +21,8 @@ INSERT INTO tutoriels (titre, categorie, difficulte, duree, description, infos, 
   '[{"titre": "Aller sur caf.fr", "description": "Ouvrez votre navigateur et tapez caf.fr dans la barre d''adresse"}, {"titre": "Accéder à ''Mon compte''", "description": "Cliquez sur ''Mon compte'' en haut à droite de la page d''accueil"}, {"titre": "Saisir vos identifiants", "description": "Entrez votre numéro d''allocataire (7 chiffres) et votre code confidentiel (6 chiffres) reçu par courrier"}, {"titre": "Consulter vos droits", "description": "Dans votre espace personnel, consultez vos allocations, vos paiements et téléchargez vos attestations de droits"}, {"titre": "Déclarer un changement", "description": "Si votre situation change (naissance, déménagement, revenus), signalez-le dans la rubrique ''Mes démarches'' pour ne pas perdre vos droits"}]',
   'https://www.caf.fr'
 ),
+
+
 (
   'France Travail - Emploi',
   'Emploi',
