@@ -9,9 +9,9 @@ import {
   Lock,
   Eye,
   EyeOff,
-  BarChart3,    // NOUVEAU
-  Users,        // NOUVEAU
-  FileText,     // NOUVEAU
+  BarChart3,    
+  Users,        
+  FileText,     
 } from "lucide-react";
 
 
