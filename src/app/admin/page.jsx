@@ -599,8 +599,9 @@ export default function AdminPage() {
                   <p className="text-sm font-bold text-[#161616]">
                     {t.titre}
                   </p>
-                  <p className="text-xs text-[#666666] mt-0.5">
-                    {t.categorie} · {t.difficulte} · {t.duree} · 👁 {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
+                  <p className="text-xs text-[#666666] mt-0.5 flex items-center gap-1">
+                    {t.categorie} · {t.difficulte} · {t.duree} ·
+                    <Eye size={12} /> {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
                   </p>
                 </div>
 
