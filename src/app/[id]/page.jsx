@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
+import VueTracker from "./VueTracker";
 import { ArrowLeft, 
   Clock, 
   Award, 
@@ -9,7 +10,8 @@ import { ArrowLeft,
   Briefcase, 
   FileText, 
   ShieldCheck, 
-  Info 
+  Info,
+  Eye,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -66,9 +68,18 @@ export default async function TutorielDetail({ params }) {
       default: return "bg-gray-100 text-gray-700";
     }
   };
-
   return (
     <div className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', Arial, sans-serif" }}>
+
+
+    <VueTracker id={id} />
+    {tutoriel.vues > 0 && (
+  <span className="px-3.5 py-1.5 rounded-full text-sm font-bold flex items-center gap-1.5 bg-white/15 text-white">
+    <Eye size={14} />
+    Consulté {tutoriel.vues} fois
+  </span>
+)}
+
 
       {/* NAV */}
 

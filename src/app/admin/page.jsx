@@ -9,9 +9,9 @@ import {
   Lock,
   Eye,
   EyeOff,
-  BarChart3,    
-  Users,        
-  FileText,     
+  BarChart3,
+  Users,
+  FileText,
 } from "lucide-react";
 
 
@@ -72,7 +72,7 @@ export default function AdminPage() {
   const [loading, setLoading]           = useState(false);
   const [showForm, setShowForm]         = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
-  const [stats, setStats]               = useState(null);  // NOUVEAU
+  const [stats, setStats]               = useState(null);
 
 
   // --- Vérifier la session au chargement ---
@@ -91,7 +91,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (isLogged) {
       fetchTutoriels();
-      fetchStats();      // NOUVEAU
+      fetchStats();
     }
   }, [isLogged]);
 
@@ -124,7 +124,7 @@ export default function AdminPage() {
     await fetch("/api/admin/session", { method: "DELETE" });
     setIsLogged(false);
     setTutoriels([]);
-    setStats(null);    // NOUVEAU
+    setStats(null);
   };
 
 
@@ -135,7 +135,7 @@ export default function AdminPage() {
 
     const { data, error } = await supabase
       .from("tutoriels")
-      .select("id, titre, categorie, difficulte, duree")
+      .select("id, titre, categorie, difficulte, duree, vues")
       .order("created_at", { ascending: false });
 
     if (!error) setTutoriels(data || []);
@@ -144,9 +144,7 @@ export default function AdminPage() {
   };
 
 
-  // =============================================
-  //  NOUVEAU — Récupérer les stats depuis Supabase
-  // =============================================
+  // --- Récupérer les stats depuis Supabase ---
 
   const fetchStats = async () => {
     const { data, error } = await supabase
@@ -184,12 +182,10 @@ export default function AdminPage() {
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    // Parser les infos (une par ligne)
     const infosArray = form.infos.trim()
       ? form.infos.split("\n").filter((l) => l.trim())
       : [];
 
-    // Parser les étapes (format : Titre | Description)
     const etapesArray = form.etapes.trim()
       ? form.etapes
           .split("\n")
@@ -271,7 +267,6 @@ export default function AdminPage() {
             maxWidth: "380px",
           }}
         >
-          {/* Titre */}
           <div
             style={{
               display: "flex",
@@ -293,7 +288,6 @@ export default function AdminPage() {
             </h1>
           </div>
 
-          {/* Champ mot de passe */}
           <label
             style={{
               display: "block",
@@ -341,7 +335,6 @@ export default function AdminPage() {
             </button>
           </div>
 
-          {/* Erreur */}
           {error && (
             <p
               style={{
@@ -354,7 +347,6 @@ export default function AdminPage() {
             </p>
           )}
 
-          {/* Bouton */}
           <button
             type="submit"
             style={{
@@ -450,9 +442,7 @@ export default function AdminPage() {
         }}
       >
 
-        {/* ================================================= */}
-        {/* NOUVEAU — Bloc Statistiques                        */}
-        {/* ================================================= */}
+        {/* --- Bloc Statistiques --- */}
 
         <div
           style={{
@@ -619,12 +609,9 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* ================================================= */}
-        {/* FIN DU NOUVEAU BLOC                                */}
-        {/* ================================================= */}
 
+        {/* --- Compteur + bouton ajouter --- */}
 
-        {/* Compteur + bouton ajouter */}
         <div
           style={{
             display: "flex",
@@ -880,7 +867,7 @@ export default function AdminPage() {
                       marginTop: "2px",
                     }}
                   >
-                    {t.categorie} · {t.difficulte} · {t.duree}
+                    {t.categorie} · {t.difficulte} · {t.duree} · 👁 {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
                   </div>
                 </div>
 
