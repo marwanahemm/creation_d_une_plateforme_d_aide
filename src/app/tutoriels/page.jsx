@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   Info,
 } from "lucide-react";
-import VueTracker from "./VueTracker";
 
 export const dynamic = "force-dynamic";
 
