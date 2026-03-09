@@ -1,6 +1,5 @@
 import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
-import VueTracker from "./VueTracker";
 import {
   ArrowLeft, Clock, Award, ExternalLink,
   HeartPulse, Baby, Briefcase, FileText, ShieldCheck,
@@ -24,10 +23,13 @@ const DIFF_COLORS = {
 };
 
 async function getTutoriel(id) {
+  const numericId = Number(id);
+  if (isNaN(numericId)) return null;
+
   const { data, error } = await supabase
     .from("tutoriels")
     .select("*")
-    .eq("id", id)
+    .eq("id", numericId)
     .single();
   if (error) return null;
   return data;
@@ -45,7 +47,6 @@ export default async function TutorielDetail({ params }) {
 
   return (
     <main className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', Arial, sans-serif" }}>
-      <VueTracker id={id} />
 
       {/* NAV */}
       <nav className="bg-white border-b border-[#dddddd]">
