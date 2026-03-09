@@ -12,31 +12,9 @@ import {
   BarChart3,
   Users,
   FileText,
+  Pencil,
+  X,
 } from "lucide-react";
-
-
-// =============================================
-//  Styles réutilisables pour les formulaires
-// =============================================
-
-const labelStyle = {
-  display: "block",
-  fontSize: ".82rem",
-  fontWeight: "600",
-  color: "#3a3a3a",
-  marginBottom: "4px",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 14px",
-  border: "2px solid #e5e7eb",
-  borderRadius: "8px",
-  fontSize: ".9rem",
-  outline: "none",
-  boxSizing: "border-box",
-  fontFamily: "inherit",
-};
 
 
 // =============================================
@@ -73,6 +51,7 @@ export default function AdminPage() {
   const [showForm, setShowForm]         = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
   const [stats, setStats]               = useState(null);
+  const [editingId, setEditingId]       = useState(null);
 
 
   // --- Vérifier la session au chargement ---
@@ -135,7 +114,7 @@ export default function AdminPage() {
 
     const { data, error } = await supabase
       .from("tutoriels")
-      .select("id, titre, categorie, difficulte, duree, vues")
+      .select("id, titre, categorie, difficulte, duree, vues, description, lien, infos, etapes")
       .order("created_at", { ascending: false });
 
     if (!error) setTutoriels(data || []);
@@ -177,9 +156,45 @@ export default function AdminPage() {
   };
 
 
-  // --- Ajouter un tutoriel ---
+  // --- Ouvrir le formulaire en mode édition ---
 
-  const handleAdd = async (e) => {
+  const handleEdit = (t) => {
+    setEditingId(t.id);
+    setShowForm(true);
+
+    const infosText = Array.isArray(t.infos)
+      ? t.infos.join("\n")
+      : "";
+
+    const etapesText = Array.isArray(t.etapes)
+      ? t.etapes.map((e) => `${e.titre} | ${e.description}`).join("\n")
+      : "";
+
+    setForm({
+      titre: t.titre || "",
+      categorie: t.categorie || "",
+      difficulte: t.difficulte || "débutant",
+      duree: t.duree || "",
+      description: t.description || "",
+      lien: t.lien || "",
+      infos: infosText,
+      etapes: etapesText,
+    });
+  };
+
+
+  // --- Annuler ---
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+  };
+
+
+  // --- Soumettre (ajout OU modification) ---
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const infosArray = form.infos.trim()
@@ -199,7 +214,7 @@ export default function AdminPage() {
           })
       : [];
 
-    const { error } = await supabase.from("tutoriels").insert({
+    const tutorielData = {
       titre: form.titre,
       categorie: form.categorie,
       difficulte: form.difficulte,
@@ -208,11 +223,25 @@ export default function AdminPage() {
       lien: form.lien,
       infos: infosArray,
       etapes: etapesArray,
-    });
+    };
+
+    let error;
+
+    if (editingId) {
+      ({ error } = await supabase
+        .from("tutoriels")
+        .update(tutorielData)
+        .eq("id", editingId));
+    } else {
+      ({ error } = await supabase
+        .from("tutoriels")
+        .insert(tutorielData));
+    }
 
     if (!error) {
       setForm(EMPTY_FORM);
       setShowForm(false);
+      setEditingId(null);
       fetchTutoriels();
     }
   };
@@ -224,17 +253,8 @@ export default function AdminPage() {
 
   if (checking) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#f9fafb",
-          fontFamily: "system-ui, sans-serif",
-        }}
-      >
-        <p style={{ color: "#666" }}>Chargement...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#f9fafb] font-[system-ui]">
+        <p className="text-[#666666]">Chargement...</p>
       </div>
     );
   }
@@ -246,120 +266,51 @@ export default function AdminPage() {
 
   if (!isLogged) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#f9fafb",
-          fontFamily: "system-ui, sans-serif",
-        }}
-      >
+      <div className="min-h-screen flex items-center justify-center bg-[#f9fafb] font-[system-ui] px-4">
         <form
           onSubmit={handleLogin}
-          style={{
-            background: "#fff",
-            padding: "40px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 24px rgba(0,0,0,.08)",
-            width: "100%",
-            maxWidth: "380px",
-          }}
+          className="bg-white p-10 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] w-full max-w-95"
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              marginBottom: "24px",
-            }}
-          >
-            <Lock size={20} color="#000091" />
-            <h1
-              style={{
-                fontSize: "1.3rem",
-                fontWeight: "800",
-                color: "#161616",
-                margin: 0,
-              }}
-            >
+          {/* Titre */}
+          <div className="flex items-center gap-2.5 mb-6">
+            <Lock size={20} className="text-[#000091]" />
+            <h1 className="text-xl font-extrabold text-[#161616]">
               Administration
             </h1>
           </div>
 
-          <label
-            style={{
-              display: "block",
-              fontSize: ".85rem",
-              fontWeight: "600",
-              color: "#3a3a3a",
-              marginBottom: "6px",
-            }}
-          >
+          {/* Champ mot de passe */}
+          <label className="block text-sm font-semibold text-[#3a3a3a] mb-1.5">
             Mot de passe
           </label>
 
-          <div style={{ position: "relative", marginBottom: "16px" }}>
+          <div className="relative mb-4">
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Entrez le mot de passe"
-              style={{
-                width: "100%",
-                padding: "12px 44px 12px 14px",
-                border: "2px solid #ddd",
-                borderRadius: "8px",
-                fontSize: ".95rem",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
+              className="w-full py-3 pl-3.5 pr-11 border-2 border-[#dddddd] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
             />
 
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: "absolute",
-                right: "12px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: "#666",
-              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666666] hover:text-[#161616]"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
+          {/* Erreur */}
           {error && (
-            <p
-              style={{
-                color: "#e1000f",
-                fontSize: ".85rem",
-                marginBottom: "12px",
-              }}
-            >
-              {error}
-            </p>
+            <p className="text-[#e1000f] text-sm mb-3">{error}</p>
           )}
 
+          {/* Bouton */}
           <button
             type="submit"
-            style={{
-              width: "100%",
-              padding: "12px",
-              background: "#000091",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: ".95rem",
-              fontWeight: "700",
-              cursor: "pointer",
-            }}
+            className="w-full py-3 bg-[#000091] text-white rounded-lg text-sm font-bold hover:bg-[#1212ff] transition-colors cursor-pointer"
           >
             Se connecter
           </button>
@@ -374,348 +325,155 @@ export default function AdminPage() {
   // =============================================
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f9fafb",
-        fontFamily: "system-ui, sans-serif",
-      }}
-    >
+    <div className="min-h-screen bg-[#f9fafb] font-[system-ui]">
+
       {/* --- Header --- */}
 
-      <div
-        style={{
-          background: "#fff",
-          borderBottom: "1px solid #e5e7eb",
-          padding: "16px 24px",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "900px",
-            margin: "0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "1.2rem",
-              fontWeight: "800",
-              color: "#161616",
-              margin: 0,
-            }}
-          >
+      <header className="bg-white border-b border-[#e5e7eb] py-4 px-6">
+        <div className="max-w-225 mx-auto flex items-center justify-between">
+          <h1 className="text-lg font-extrabold text-[#161616]">
             Administration
           </h1>
 
           <button
             onClick={handleLogout}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              background: "none",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "8px 16px",
-              fontSize: ".85rem",
-              fontWeight: "600",
-              color: "#666",
-              cursor: "pointer",
-            }}
+            className="flex items-center gap-1.5 border border-[#dddddd] rounded-lg px-4 py-2 text-sm font-semibold text-[#666666] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
           >
             <LogOut size={16} /> Déconnexion
           </button>
         </div>
-      </div>
+      </header>
 
 
       {/* --- Contenu principal --- */}
 
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          padding: "32px 24px",
-        }}
-      >
+      <main className="max-w-225 mx-auto px-6 py-8">
 
         {/* --- Bloc Statistiques --- */}
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "16px",
-            marginBottom: "32px",
-          }}
-        >
+        <section className="grid grid-cols-3 gap-4 mb-8">
+
           {/* Carte : Tutoriels */}
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "24px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginBottom: "12px",
-              }}
-            >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: "#f5f5fe",
-                  color: "#000091",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+          <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
+            <div className="flex items-center gap-2.5 mb-3">
+              <span className="w-10 h-10 rounded-[10px] bg-[#f5f5fe] text-[#000091] flex items-center justify-center">
                 <FileText size={20} />
-              </div>
-              <span
-                style={{
-                  fontSize: ".82rem",
-                  fontWeight: "600",
-                  color: "#666",
-                }}
-              >
-                Tutoriels
               </span>
+              <span className="text-xs font-semibold text-[#666666]">Tutoriels</span>
             </div>
-            <div
-              style={{
-                fontSize: "2rem",
-                fontWeight: "900",
-                color: "#161616",
-              }}
-            >
-              {tutoriels.length}
-            </div>
+            <p className="text-3xl font-black text-[#161616]">{tutoriels.length}</p>
           </div>
 
           {/* Carte : Visites */}
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "24px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginBottom: "12px",
-              }}
-            >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: "#b8fec9",
-                  color: "#18753c",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+          <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
+            <div className="flex items-center gap-2.5 mb-3">
+              <span className="w-10 h-10 rounded-[10px] bg-[#b8fec9] text-[#18753c] flex items-center justify-center">
                 <Users size={20} />
-              </div>
-              <span
-                style={{
-                  fontSize: ".82rem",
-                  fontWeight: "600",
-                  color: "#666",
-                }}
-              >
-                Visites
               </span>
+              <span className="text-xs font-semibold text-[#666666]">Visites</span>
             </div>
-            <div
-              style={{
-                fontSize: "2rem",
-                fontWeight: "900",
-                color: "#161616",
-              }}
-            >
+            <p className="text-3xl font-black text-[#161616]">
               {stats ? (stats.visites || 0) : "..."}
-            </div>
+            </p>
           </div>
 
           {/* Carte : Pages vues */}
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "24px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                marginBottom: "12px",
-              }}
-            >
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: "#fef3c7",
-                  color: "#92400e",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+          <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
+            <div className="flex items-center gap-2.5 mb-3">
+              <span className="w-10 h-10 rounded-[10px] bg-[#fef3c7] text-[#92400e] flex items-center justify-center">
                 <BarChart3 size={20} />
-              </div>
-              <span
-                style={{
-                  fontSize: ".82rem",
-                  fontWeight: "600",
-                  color: "#666",
-                }}
-              >
-                Pages vues
               </span>
+              <span className="text-xs font-semibold text-[#666666]">Pages vues</span>
             </div>
-            <div
-              style={{
-                fontSize: "2rem",
-                fontWeight: "900",
-                color: "#161616",
-              }}
-            >
+            <p className="text-3xl font-black text-[#161616]">
               {stats ? (stats.pages_vues || 0) : "..."}
-            </div>
+            </p>
           </div>
-        </div>
+        </section>
 
 
-        {/* --- Compteur + bouton ajouter --- */}
+        {/* --- Compteur + bouton --- */}
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "24px",
-          }}
-        >
-          <p style={{ fontSize: ".95rem", color: "#666", margin: 0 }}>
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-sm text-[#666666]">
             {tutoriels.length} tutoriel{tutoriels.length > 1 ? "s" : ""}
           </p>
 
           <button
-            onClick={() => setShowForm(!showForm)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              background: "#000091",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              padding: "10px 20px",
-              fontSize: ".9rem",
-              fontWeight: "700",
-              cursor: "pointer",
+            onClick={() => {
+              if (showForm) {
+                handleCancel();
+              } else {
+                setEditingId(null);
+                setForm(EMPTY_FORM);
+                setShowForm(true);
+              }
             }}
+            className={`flex items-center gap-1.5 text-white rounded-lg px-5 py-2.5 text-sm font-bold cursor-pointer transition-colors ${
+              showForm
+                ? "bg-[#666666] hover:bg-[#555555]"
+                : "bg-[#000091] hover:bg-[#1212ff]"
+            }`}
           >
-            <Plus size={18} /> Ajouter
+            {showForm ? <><X size={18} /> Fermer</> : <><Plus size={18} /> Ajouter</>}
           </button>
         </div>
 
 
-        {/* --- Formulaire d'ajout --- */}
+        {/* --- Formulaire d'ajout / modification --- */}
 
         {showForm && (
           <form
-            onSubmit={handleAdd}
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: "12px",
-              padding: "28px",
-              marginBottom: "24px",
-            }}
+            onSubmit={handleSubmit}
+            className={`bg-white rounded-xl p-7 mb-6 ${
+              editingId
+                ? "border-2 border-[#000091]"
+                : "border border-[#e5e7eb]"
+            }`}
           >
-            <h2
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: "700",
-                color: "#161616",
-                marginBottom: "20px",
-              }}
-            >
-              Nouveau tutoriel
+            <h2 className="text-lg font-bold text-[#161616] mb-5">
+              {editingId ? "Modifier le tutoriel" : "Nouveau tutoriel"}
             </h2>
 
             {/* Ligne 1 : Titre + Catégorie */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "16px",
-                marginBottom: "16px",
-              }}
-            >
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label style={labelStyle}>Titre *</label>
+                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                  Titre *
+                </label>
                 <input
                   required
                   value={form.titre}
                   onChange={(e) => setForm({ ...form, titre: e.target.value })}
                   placeholder="Ex: Ameli - Assurance Maladie"
-                  style={inputStyle}
+                  className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
                 />
               </div>
 
               <div>
-                <label style={labelStyle}>Catégorie *</label>
+                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                  Catégorie *
+                </label>
                 <input
                   required
                   value={form.categorie}
                   onChange={(e) => setForm({ ...form, categorie: e.target.value })}
                   placeholder="Ex: Santé"
-                  style={inputStyle}
+                  className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
                 />
               </div>
             </div>
 
             {/* Ligne 2 : Difficulté + Durée */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "16px",
-                marginBottom: "16px",
-              }}
-            >
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label style={labelStyle}>Difficulté</label>
+                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                  Difficulté
+                </label>
                 <select
                   value={form.difficulte}
                   onChange={(e) => setForm({ ...form, difficulte: e.target.value })}
-                  style={inputStyle}
+                  className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
                 >
                   <option value="débutant">Débutant</option>
                   <option value="intermédiaire">Intermédiaire</option>
@@ -724,42 +482,50 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label style={labelStyle}>Durée</label>
+                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                  Durée
+                </label>
                 <input
                   value={form.duree}
                   onChange={(e) => setForm({ ...form, duree: e.target.value })}
                   placeholder="Ex: 10 min"
-                  style={inputStyle}
+                  className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
                 />
               </div>
             </div>
 
             {/* Description */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Description</label>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                Description
+              </label>
               <textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Décrivez le tutoriel en quelques phrases"
                 rows={3}
-                style={{ ...inputStyle, resize: "vertical" }}
+                className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors resize-y"
               />
             </div>
 
             {/* Lien officiel */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Lien officiel</label>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                Lien officiel
+              </label>
               <input
                 value={form.lien}
                 onChange={(e) => setForm({ ...form, lien: e.target.value })}
                 placeholder="https://www.ameli.fr"
-                style={inputStyle}
+                className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors"
               />
             </div>
 
             {/* Infos utiles */}
-            <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Infos utiles (une par ligne)</label>
+            <div className="mb-4">
+              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                Infos utiles (une par ligne)
+              </label>
               <textarea
                 value={form.infos}
                 onChange={(e) => setForm({ ...form, infos: e.target.value })}
@@ -768,13 +534,13 @@ export default function AdminPage() {
                   + "Le code d'activation est envoyé par courrier sous 48h"
                 }
                 rows={4}
-                style={{ ...inputStyle, resize: "vertical" }}
+                className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors resize-y"
               />
             </div>
 
             {/* Étapes */}
-            <div style={{ marginBottom: "20px" }}>
-              <label style={labelStyle}>
+            <div className="mb-5">
+              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
                 Étapes (format : Titre | Description, une par ligne)
               </label>
               <textarea
@@ -785,41 +551,27 @@ export default function AdminPage() {
                   + "Créer mon compte | Cliquez sur Mon compte en haut à droite"
                 }
                 rows={5}
-                style={{ ...inputStyle, resize: "vertical" }}
+                className="w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm outline-none focus:border-[#000091] transition-colors resize-y"
               />
             </div>
 
             {/* Actions */}
-            <div style={{ display: "flex", gap: "12px" }}>
+            <div className="flex gap-3">
               <button
                 type="submit"
-                style={{
-                  padding: "10px 24px",
-                  background: "#000091",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: ".9rem",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                }}
+                className={`px-6 py-2.5 text-white rounded-lg text-sm font-bold cursor-pointer transition-colors ${
+                  editingId
+                    ? "bg-[#18753c] hover:bg-[#145e30]"
+                    : "bg-[#000091] hover:bg-[#1212ff]"
+                }`}
               >
-                Enregistrer
+                {editingId ? "Sauvegarder les modifications" : "Enregistrer"}
               </button>
 
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
-                style={{
-                  padding: "10px 24px",
-                  background: "none",
-                  color: "#666",
-                  border: "1px solid #ddd",
-                  borderRadius: "8px",
-                  fontSize: ".9rem",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                }}
+                onClick={handleCancel}
+                className="px-6 py-2.5 border border-[#dddddd] rounded-lg text-sm font-semibold text-[#666666] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
               >
                 Annuler
               </button>
@@ -831,69 +583,48 @@ export default function AdminPage() {
         {/* --- Liste des tutoriels --- */}
 
         {loading ? (
-          <p style={{ color: "#666", textAlign: "center", padding: "40px" }}>
-            Chargement...
-          </p>
+          <p className="text-[#666666] text-center py-10">Chargement...</p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div className="flex flex-col gap-2">
             {tutoriels.map((t) => (
               <div
                 key={t.id}
-                style={{
-                  background: "#fff",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "10px",
-                  padding: "16px 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "16px",
-                }}
+                className={`bg-white rounded-[10px] px-5 py-4 flex items-center justify-between gap-4 ${
+                  editingId === t.id
+                    ? "border-2 border-[#000091]"
+                    : "border border-[#e5e7eb]"
+                }`}
               >
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      fontSize: ".95rem",
-                      fontWeight: "700",
-                      color: "#161616",
-                    }}
-                  >
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-[#161616]">
                     {t.titre}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: ".8rem",
-                      color: "#666",
-                      marginTop: "2px",
-                    }}
-                  >
-                    {t.categorie} · {t.difficulte} · {t.duree} · 👁 {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
-                  </div>
+                  </p>
+                  <p className="text-xs text-[#666666] mt-0.5 flex items-center gap-1">
+                    {t.categorie} · {t.difficulte} · {t.duree} ·
+                    <Eye size={12} /> {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
+                  </p>
                 </div>
 
-                <button
-                  onClick={() => handleDelete(t.id, t.titre)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                    background: "none",
-                    border: "1px solid #fecaca",
-                    borderRadius: "8px",
-                    padding: "8px 12px",
-                    fontSize: ".8rem",
-                    fontWeight: "600",
-                    color: "#dc2626",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Trash2 size={15} /> Supprimer
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(t)}
+                    className="flex items-center gap-1 border border-[#e5e7eb] rounded-lg px-3 py-2 text-xs font-semibold text-[#000091] hover:border-[#000091] hover:bg-[#f5f5fe] transition-colors cursor-pointer"
+                  >
+                    <Pencil size={14} /> Modifier
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(t.id, t.titre)}
+                    className="flex items-center gap-1 border border-[#fecaca] rounded-lg px-3 py-2 text-xs font-semibold text-[#dc2626] hover:bg-[#fef2f2] transition-colors cursor-pointer"
+                  >
+                    <Trash2 size={14} /> Supprimer
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
