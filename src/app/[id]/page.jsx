@@ -1,10 +1,9 @@
 import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
-import VueTracker from "./VueTracker";
 import {
-  ArrowLeft, Clock, Award, ExternalLink,
+  ArrowLeft, Clock, Award, ExternalLink, Eye,
   HeartPulse, Baby, Briefcase, FileText, ShieldCheck,
-  Info, Eye, ZoomIn,
+  Info, ZoomIn,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -24,11 +23,15 @@ const DIFF_COLORS = {
 };
 
 async function getTutoriel(id) {
+  const numericId = Number(id);
+  if (isNaN(numericId)) return null;
+
   const { data, error } = await supabase
     .from("tutoriels")
     .select("*")
-    .eq("id", id)
+    .eq("id", numericId)
     .single();
+
   if (error) return null;
   return data;
 }
@@ -45,15 +48,13 @@ export default async function TutorielDetail({ params }) {
 
   return (
     <main className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', Arial, sans-serif" }}>
-      <VueTracker id={id} />
-
       {/* NAV */}
       <nav className="bg-white border-b border-[#dddddd]">
         <section className="max-w-270 mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
-          <a href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
+          <Link href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
             <span className="w-1 h-7 rounded-sm" style={{ background: "linear-gradient(180deg, #000091 50%, #e1000f 50%)" }} />
             Démarches Admin
-          </a>
+          </Link>
           <nav className="flex gap-2.5 flex-wrap">
             <Link href="/tutoriels" className="inline-flex items-center gap-1.5 border-2 border-[#000091] text-[#000091] px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#f5f5fe] transition-colors">
               <ArrowLeft size={16} /> Tutoriels
