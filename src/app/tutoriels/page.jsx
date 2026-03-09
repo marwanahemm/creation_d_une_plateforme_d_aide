@@ -23,12 +23,22 @@ const DIFF_COLORS = {
 };
 
 async function getTutoriel(id) {
+  // ✅ CORRECTION : cast en nombre pour correspondre au type integer de Supabase
+  const numericId = Number(id);
+
+  if (isNaN(numericId)) return null;
+
   const { data, error } = await supabase
     .from("tutoriels")
     .select("*")
-    .eq("id", id)
+    .eq("id", numericId)
     .single();
-  if (error) return null;
+
+  if (error) {
+    console.error("Erreur Supabase :", error.message);
+    return null;
+  }
+
   return data;
 }
 
