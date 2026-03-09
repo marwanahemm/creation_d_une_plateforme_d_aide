@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabaseClient";
+﻿import supabase from "@/lib/supabaseClient";
 import Link from "next/link";
 import {
   ArrowLeft, Clock, Award, ExternalLink,
@@ -23,10 +23,12 @@ const DIFF_COLORS = {
 };
 
 async function getTutoriel(id) {
+  const numericId = Number(id);
+  if (isNaN(numericId)) return null;
   const { data, error } = await supabase
     .from("tutoriels")
     .select("*")
-    .eq("id", id)
+    .eq("id", numericId)
     .single();
   if (error) return null;
   return data;
@@ -35,18 +37,12 @@ async function getTutoriel(id) {
 export default async function TutorielDetail({ params }) {
   const { id } = await params;
   if (id === "landing.html") return null;
-
   const t = await getTutoriel(id);
-
   if (!t) {
     return <p className="text-center py-16 text-[#666666]">Tutoriel non trouvé</p>;
   }
-
   return (
     <main className="min-h-screen bg-[#f6f6f6]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', Arial, sans-serif" }}>
-      <VueTracker id={id} />
-
-      {/* NAV */}
       <nav className="bg-white border-b border-[#dddddd]">
         <section className="max-w-270 mx-auto px-6 py-4 flex items-center justify-between flex-wrap gap-3">
           <a href="/" className="flex items-center gap-2.5 font-black text-lg text-[#000091]">
@@ -63,8 +59,6 @@ export default async function TutorielDetail({ params }) {
           </nav>
         </section>
       </nav>
-
-      {/* HERO */}
       <header className="bg-[#000091] text-white py-12 px-6">
         <section className="max-w-190 mx-auto">
           <span className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 bg-white/15">
@@ -90,12 +84,8 @@ export default async function TutorielDetail({ params }) {
           </ul>
         </section>
       </header>
-
-      {/* CONTENU */}
       <article className="max-w-190 mx-auto px-6 py-10">
         <p className="text-lg text-[#3a3a3a] leading-relaxed mb-8">{t.description}</p>
-
-        {/* Infos utiles */}
         {t.infos?.length > 0 && (
           <aside className="bg-[#f5f5fe] border-l-4 border-[#000091] rounded-r-lg p-5 mb-10">
             <h3 className="font-extrabold text-[#000091] mb-3 flex items-center gap-2">
@@ -103,15 +93,13 @@ export default async function TutorielDetail({ params }) {
             </h3>
             <ul className="space-y-2">
               {t.infos.map((info, i) => (
-                <li key={i} className="text-sm text-[#3a3a3a] pl-5 relative before:content-['→'] before:absolute before:left-0 before:text-[#000091] before:font-bold">
+                <li key={i} className="text-sm text-[#3a3a3a] pl-5 relative before:content-[&apos;→&apos;] before:absolute before:left-0 before:text-[#000091] before:font-bold">
                   {info}
                 </li>
               ))}
             </ul>
           </aside>
         )}
-
-        {/* Étapes */}
         {t.etapes?.length > 0 && (
           <section>
             <h2 className="text-2xl font-black text-[#161616] mb-6">Étapes à suivre</h2>
@@ -127,18 +115,12 @@ export default async function TutorielDetail({ params }) {
                       <p className="text-sm text-[#666666] leading-relaxed">{etape.description}</p>
                     </section>
                   </article>
-
                   {etape.image && (
                     <figure className="px-6 pb-6 m-0">
                       <figcaption className="flex items-center gap-2 px-3 py-2 bg-[#f0f0f5] border border-[#e5e7eb] rounded-t-lg text-xs font-semibold text-[#666666]">
                         <ZoomIn size={14} /> Capture d&apos;écran — Étape {i + 1}
                       </figcaption>
-                      <img
-                        src={etape.image}
-                        alt={`Capture d'écran : ${etape.titre}`}
-                        className="w-full h-auto border border-t-0 border-[#e5e7eb] rounded-b-lg"
-                        loading="lazy"
-                      />
+                      <img src={etape.image} alt={`Capture d'écran : ${etape.titre}`} className="w-full h-auto border border-t-0 border-[#e5e7eb] rounded-b-lg" loading="lazy" />
                     </figure>
                   )}
                 </li>
@@ -146,20 +128,13 @@ export default async function TutorielDetail({ params }) {
             </ol>
           </section>
         )}
-
-        {/* Lien officiel */}
         {t.lien && (
           <footer className="bg-[#000091] rounded-lg p-7 mt-10 flex items-center justify-between flex-wrap gap-4">
             <hgroup>
               <h2 className="text-lg font-black text-white">Accéder au site officiel</h2>
               <p className="text-sm text-white/75">Vous serez redirigé vers la plateforme officielle.</p>
             </hgroup>
-            <a
-              href={t.lien}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white text-[#000091] px-6 py-3 rounded-lg text-sm font-extrabold hover:shadow-lg hover:-translate-y-0.5 transition-all"
-            >
+            <a href={t.lien} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-white text-[#000091] px-6 py-3 rounded-lg text-sm font-extrabold hover:shadow-lg hover:-translate-y-0.5 transition-all">
               <ExternalLink size={16} /> Ouvrir le site
             </a>
           </footer>
