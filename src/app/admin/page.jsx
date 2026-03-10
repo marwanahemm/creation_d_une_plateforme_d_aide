@@ -9,8 +9,6 @@ import {
   Lock,
   Eye,
   EyeOff,
-  BarChart3,
-  Users,
   FileText,
   Pencil,
   X,
@@ -50,7 +48,6 @@ export default function AdminPage() {
   const [loading, setLoading]           = useState(false);
   const [showForm, setShowForm]         = useState(false);
   const [form, setForm]                 = useState(EMPTY_FORM);
-  const [stats, setStats]               = useState(null);
   const [editingId, setEditingId]       = useState(null);
 
 
@@ -65,12 +62,11 @@ export default function AdminPage() {
   }, []);
 
 
-  // --- Charger les tutoriels et les stats quand connecté ---
+  // --- Charger les tutoriels quand connecté ---
 
   useEffect(() => {
     if (isLogged) {
       fetchTutoriels();
-      fetchStats();
     }
   }, [isLogged]);
 
@@ -103,7 +99,6 @@ export default function AdminPage() {
     await fetch("/api/admin/session", { method: "DELETE" });
     setIsLogged(false);
     setTutoriels([]);
-    setStats(null);
   };
 
 
@@ -114,29 +109,12 @@ export default function AdminPage() {
 
     const { data, error } = await supabase
       .from("tutoriels")
-      .select("id, titre, categorie, difficulte, duree, vues, description, lien, infos, etapes")
+      .select("id, titre, categorie, difficulte, duree, description, lien, infos, etapes")
       .order("created_at", { ascending: false });
 
     if (!error) setTutoriels(data || []);
 
     setLoading(false);
-  };
-
-
-  // --- Récupérer les stats depuis Supabase ---
-
-  const fetchStats = async () => {
-    const { data, error } = await supabase
-      .from("stats")
-      .select("compteur, valeur");
-
-    if (!error && data) {
-      const mapped = {};
-      data.forEach((row) => {
-        mapped[row.compteur] = row.valeur;
-      });
-      setStats(mapped);
-    }
   };
 
 
@@ -254,7 +232,7 @@ export default function AdminPage() {
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f9fafb] font-[system-ui]">
-        <p className="text-[#666666]">Chargement...</p>
+        <p className="text-[#161515]">Chargement...</p>
       </div>
     );
   }
@@ -280,7 +258,7 @@ export default function AdminPage() {
           </div>
 
           {/* Champ mot de passe */}
-          <label className="block text-sm font-semibold text-[#3a3a3a] mb-1.5">
+          <label className="block text-sm font-semibold text-[#111010] mb-1.5">
             Mot de passe
           </label>
 
@@ -296,7 +274,7 @@ export default function AdminPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#666666] hover:text-[#161616]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#0f0e0e] hover:text-[#161616]"
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -337,7 +315,7 @@ export default function AdminPage() {
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 border border-[#dddddd] rounded-lg px-4 py-2 text-sm font-semibold text-[#666666] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 border border-[#dddddd] rounded-lg px-4 py-2 text-sm font-semibold text-[#0b0b0b] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
           >
             <LogOut size={16} /> Déconnexion
           </button>
@@ -351,43 +329,15 @@ export default function AdminPage() {
 
         {/* --- Bloc Statistiques --- */}
 
-        <section className="grid grid-cols-3 gap-4 mb-8">
-
-          {/* Carte : Tutoriels */}
+        <section className="mb-8">
           <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-10 h-10 rounded-[10px] bg-[#f5f5fe] text-[#000091] flex items-center justify-center">
                 <FileText size={20} />
               </span>
-              <span className="text-xs font-semibold text-[#666666]">Tutoriels</span>
+              <span className="text-xs font-semibold text-[#1c1a1a]">Tutoriels</span>
             </div>
             <p className="text-3xl font-black text-[#161616]">{tutoriels.length}</p>
-          </div>
-
-          {/* Carte : Visites */}
-          <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
-            <div className="flex items-center gap-2.5 mb-3">
-              <span className="w-10 h-10 rounded-[10px] bg-[#b8fec9] text-[#18753c] flex items-center justify-center">
-                <Users size={20} />
-              </span>
-              <span className="text-xs font-semibold text-[#666666]">Visites</span>
-            </div>
-            <p className="text-3xl font-black text-[#161616]">
-              {stats ? (stats.visites || 0) : "..."}
-            </p>
-          </div>
-
-          {/* Carte : Pages vues */}
-          <div className="bg-white border border-[#e5e7eb] rounded-xl p-6">
-            <div className="flex items-center gap-2.5 mb-3">
-              <span className="w-10 h-10 rounded-[10px] bg-[#fef3c7] text-[#92400e] flex items-center justify-center">
-                <BarChart3 size={20} />
-              </span>
-              <span className="text-xs font-semibold text-[#666666]">Pages vues</span>
-            </div>
-            <p className="text-3xl font-black text-[#161616]">
-              {stats ? (stats.pages_vues || 0) : "..."}
-            </p>
           </div>
         </section>
 
@@ -395,7 +345,7 @@ export default function AdminPage() {
         {/* --- Compteur + bouton --- */}
 
         <div className="flex justify-between items-center mb-6">
-          <p className="text-sm text-[#666666]">
+          <p className="text-sm text-[#121111]">
             {tutoriels.length} tutoriel{tutoriels.length > 1 ? "s" : ""}
           </p>
 
@@ -411,11 +361,21 @@ export default function AdminPage() {
             }}
             className={`flex items-center gap-1.5 text-white rounded-lg px-5 py-2.5 text-sm font-bold cursor-pointer transition-colors ${
               showForm
-                ? "bg-[#666666] hover:bg-[#555555]"
+                ? "bg-[#0f0f0f] hover:bg-[#2c2c2c]"
                 : "bg-[#000091] hover:bg-[#1212ff]"
             }`}
           >
-            {showForm ? <><X size={18} /> Fermer</> : <><Plus size={18} /> Ajouter</>}
+            {showForm ? (
+              <>
+                <X size={18} />
+                <span>Fermer</span>
+              </>
+            ) : (
+              <>
+                <Plus size={18} />
+                <span>Ajouter</span>
+              </>
+            )}
           </button>
         </div>
 
@@ -438,7 +398,7 @@ export default function AdminPage() {
             {/* Ligne 1 : Titre + Catégorie */}
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                <label className="block text-xs font-semibold text-[#100f0f] mb-1">
                   Titre *
                 </label>
                 <input
@@ -451,7 +411,7 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                <label className="block text-xs font-semibold text-[#0f0f0f] mb-1">
                   Catégorie *
                 </label>
                 <input
@@ -467,7 +427,7 @@ export default function AdminPage() {
             {/* Ligne 2 : Difficulté + Durée */}
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+                <label className="block text-xs font-semibold text-[#111111] mb-1">
                   Difficulté
                 </label>
                 <select
@@ -496,7 +456,7 @@ export default function AdminPage() {
 
             {/* Description */}
             <div className="mb-4">
-              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+              <label className="block text-xs font-semibold text-[#101010] mb-1">
                 Description
               </label>
               <textarea
@@ -510,7 +470,7 @@ export default function AdminPage() {
 
             {/* Lien officiel */}
             <div className="mb-4">
-              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+              <label className="block text-xs font-semibold text-[#060606] mb-1">
                 Lien officiel
               </label>
               <input
@@ -540,7 +500,7 @@ export default function AdminPage() {
 
             {/* Étapes */}
             <div className="mb-5">
-              <label className="block text-xs font-semibold text-[#3a3a3a] mb-1">
+              <label className="block text-xs font-semibold text-[#141414] mb-1">
                 Étapes (format : Titre | Description, une par ligne)
               </label>
               <textarea
@@ -571,7 +531,7 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-6 py-2.5 border border-[#dddddd] rounded-lg text-sm font-semibold text-[#666666] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
+                className="px-6 py-2.5 border border-[#dddddd] rounded-lg text-sm font-semibold text-[#111010] hover:border-[#000091] hover:text-[#000091] transition-colors cursor-pointer"
               >
                 Annuler
               </button>
@@ -583,7 +543,7 @@ export default function AdminPage() {
         {/* --- Liste des tutoriels --- */}
 
         {loading ? (
-          <p className="text-[#666666] text-center py-10">Chargement...</p>
+          <p className="text-[#161616] text-center py-10">Chargement...</p>
         ) : (
           <div className="flex flex-col gap-2">
             {tutoriels.map((t) => (
@@ -599,9 +559,8 @@ export default function AdminPage() {
                   <p className="text-sm font-bold text-[#161616]">
                     {t.titre}
                   </p>
-                  <p className="text-xs text-[#666666] mt-0.5 flex items-center gap-1">
-                    {t.categorie} · {t.difficulte} · {t.duree} ·
-                    <Eye size={12} /> {t.vues || 0} vue{(t.vues || 0) > 1 ? "s" : ""}
+                  <p className="text-xs text-[#1f1d1d] mt-0.5">
+                    {t.categorie} · {t.difficulte} · {t.duree}
                   </p>
                 </div>
 
