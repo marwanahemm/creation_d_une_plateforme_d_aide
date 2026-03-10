@@ -7,6 +7,7 @@ import {
   Clock, Gauge, ArrowLeft, ArrowRight, Info, ImageOff
 } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
+import FeedbackBox from '@/components/FeedbackBox'
 
 const COULEURS = {
   Santé:     '#0d6efd',
@@ -264,6 +265,17 @@ export default function TutorielDetail({ params }) {
                   </a>
                 </p>
               )}
+              {!termine && lien && (
+                <p className="mt-3 flex justify-end">
+                  <a href={lien} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-[#000091] transition-colors">
+                    Site officiel <ExternalLink size={11} />
+                  </a>
+                </p>
+              )}
+
+              {/* 👇 Ajoute cette ligne ici */}
+              <FeedbackBox tutorielId={tutoriel.id} couleur={couleur} />
             </section>
           </section>
         )}
