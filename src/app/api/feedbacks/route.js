@@ -4,7 +4,7 @@ import supabase from "@/lib/supabaseClient";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { tutoriel_id, utile } = body;
+    const { tutoriel_id, utile, commentaire } = body;
 
     // --- Vérifications basiques ---
 
@@ -15,11 +15,18 @@ export async function POST(request) {
       );
     }
 
+    // --- Construire le payload ---
+
+    const payload = { tutoriel_id, utile };
+    if (commentaire && typeof commentaire === "string") {
+      payload.commentaire = commentaire.trim().slice(0, 1000) || null;
+    }
+
     // --- Insérer le feedback dans Supabase ---
 
     const { error } = await supabase
       .from("feedbacks")
-      .insert({ tutoriel_id, utile });
+      .insert(payload);
 
     if (error) {
       console.error("Erreur Supabase feedback:", error);
