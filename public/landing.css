@@ -244,7 +244,6 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 8px;
   transition: border-color .2s;
 }
-.mockup-item:hover { border-color: var(--bleu-france); }
 .mockup-item-icon {
   width: 36px; height: 36px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
@@ -450,10 +449,7 @@ a { text-decoration: none; color: inherit; }
   padding: 28px 24px;
   transition: border-color .3s, box-shadow .3s;
 }
-.step-card:hover {
-  border-color: #818cf8;
-  box-shadow: 0 8px 30px rgba(99,102,241,.12);
-}
+
 .step-header {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 18px;
