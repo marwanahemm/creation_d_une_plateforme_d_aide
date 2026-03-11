@@ -20,7 +20,8 @@ export async function GET() {
 
   const { data, error } = await supabaseAdmin
     .from("feedbacks")
-    .select("tutoriel_id, utile");
+    .select("tutoriel_id, utile, commentaire, created_at")
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Erreur feedbacks:", error);
@@ -31,18 +32,24 @@ export async function GET() {
   }
 
   // --- Regrouper par tutoriel ---
-  // On construit un objet : { tutoriel_id: { positifs: X, negatifs: Y } }
 
   const stats = {};
 
   (data || []).forEach((row) => {
     if (!stats[row.tutoriel_id]) {
-      stats[row.tutoriel_id] = { positifs: 0, negatifs: 0 };
+      stats[row.tutoriel_id] = { positifs: 0, negatifs: 0, commentaires: [] };
     }
     if (row.utile) {
       stats[row.tutoriel_id].positifs++;
     } else {
       stats[row.tutoriel_id].negatifs++;
+    }
+    if (row.commentaire) {
+      stats[row.tutoriel_id].commentaires.push({
+        texte: row.commentaire,
+        utile: row.utile,
+        date: row.created_at,
+      });
     }
   });
 
