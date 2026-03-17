@@ -5,7 +5,7 @@ import Link from "next/link";
 import supabase from "@/lib/supabaseClient";
 import {
   Trash2, Plus, LogOut, Lock, Eye, EyeOff,
-  FileText, Pencil, X, ThumbsUp, ThumbsDown, LayoutDashboard,
+  FileText, Pencil, X, ThumbsUp, ThumbsDown, LayoutDashboard, Lightbulb,
 } from "lucide-react";
 
 const EMPTY_FORM = {
@@ -27,6 +27,7 @@ export default function AdminPage() {
   const [form, setForm]                 = useState(EMPTY_FORM);
   const [editingId, setEditingId]       = useState(null);
   const [feedbacks, setFeedbacks]       = useState({});
+  const [nbPropositions, setNbPropositions] = useState(0);
 
   useEffect(() => {
     fetch("/api/admin/session")
@@ -35,7 +36,7 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    if (isLogged) { fetchTutoriels(); fetchFeedbacks(); }
+    if (isLogged) { fetchTutoriels(); fetchFeedbacks(); fetchNbPropositions(); }
   }, [isLogged]);
 
   const handleLogin = async (e) => {
@@ -66,6 +67,17 @@ export default function AdminPage() {
       const res = await fetch("/api/admin/feedbacks");
       if (res.ok) { const d = await res.json(); setFeedbacks(d.feedbacks || {}); }
     } catch (err) { console.error("Erreur feedbacks:", err); }
+  };
+
+  const fetchNbPropositions = async () => {
+    try {
+      const res = await fetch("/api/admin/propositions");
+      if (res.ok) {
+        const d = await res.json();
+        const nouvelles = (d.propositions || []).filter(p => p.statut === "nouvelle").length;
+        setNbPropositions(nouvelles);
+      }
+    } catch (err) { console.error("Erreur propositions:", err); }
   };
 
   const handleDelete = async (id, titre) => {
@@ -153,8 +165,18 @@ export default function AdminPage() {
           <h1 className="text-lg font-extrabold text-[#161616]">Administration</h1>
           <menu className="flex items-center gap-3 list-none p-0 m-0">
             <li>
-              <Link href="/dashboard" className="flex items-center gap-1.5 border border-[#000091] text-[#000091] rounded-lg px-4 py-2 text-sm font-semibold hover:bg-[#f5f5fe] transition-colors">
+              <Link href="/admin/dashboard" className="flex items-center gap-1.5 border border-[#000091] text-[#000091] rounded-lg px-4 py-2 text-sm font-semibold hover:bg-[#f5f5fe] transition-colors">
                 <LayoutDashboard size={16} /> Feedbacks
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin/dashboard" className="relative flex items-center gap-1.5 border border-amber-400 text-amber-600 rounded-lg px-4 py-2 text-sm font-semibold hover:bg-amber-50 transition-colors">
+                <Lightbulb size={16} /> Propositions
+                {nbPropositions > 0 && (
+                  <span className="absolute -top-2 -right-2 w-5 h-5 bg-amber-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {nbPropositions}
+                  </span>
+                )}
               </Link>
             </li>
             <li>

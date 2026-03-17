@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, ArrowLeft, Lock, Loader2 } from 'lucide-react'
+import { LayoutDashboard, ArrowLeft, Lock, Loader2, Lightbulb } from 'lucide-react'
 import FeedbacksDashboard from '@/components/admin/FeedbacksDashboard'
+import PropositionsDashboard from '@/components/admin/PropositionsDashboard'
 
 export default function DashboardPage() {
   const [auth, setAuth]         = useState(false)
   const [checking, setChecking] = useState(true)
+  const [onglet, setOnglet]     = useState('feedbacks')
 
   useEffect(() => {
     fetch('/api/admin/session')
@@ -47,15 +49,40 @@ export default function DashboardPage() {
       </nav>
 
       <article className="max-w-4xl mx-auto px-4 py-8">
-        <header className="mb-8">
+        <header className="mb-6">
           <h1 className="flex items-center gap-2 text-2xl font-black text-slate-800">
-            <LayoutDashboard size={24} /> Dashboard — Retours utilisateurs
+            <LayoutDashboard size={24} /> Dashboard
           </h1>
-          <p className="text-sm text-slate-400 mt-1">Vue d'ensemble des avis collectés sur les tutoriels.</p>
+          <p className="text-sm text-slate-400 mt-1">Retours utilisateurs et propositions de tutoriels.</p>
         </header>
 
+        {/* Onglets */}
+        <nav className="flex gap-2 mb-6">
+          <button
+            onClick={() => setOnglet('feedbacks')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              onglet === 'feedbacks'
+                ? 'bg-[#000091] text-white'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <LayoutDashboard size={16} /> Feedbacks
+          </button>
+          <button
+            onClick={() => setOnglet('propositions')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+              onglet === 'propositions'
+                ? 'bg-amber-500 text-white'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <Lightbulb size={16} /> Propositions
+          </button>
+        </nav>
+
+        {/* Contenu */}
         <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <FeedbacksDashboard />
+          {onglet === 'feedbacks' ? <FeedbacksDashboard /> : <PropositionsDashboard />}
         </section>
       </article>
     </main>

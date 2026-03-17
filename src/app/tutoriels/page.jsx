@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BookOpen, Clock, Award, Search, HeartPulse, Baby, Briefcase, FileText, ShieldCheck } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
+import PropositionBox from '@/components/PropositionBox'
 
 const ICONS = {
   Santé:     <HeartPulse size={22} />,
@@ -143,6 +144,13 @@ export default function TutorielsPage() {
               Effacer la recherche
             </button>
           </p>
+        )}
+
+        {/* Proposition de tutoriel */}
+        {!chargement && (
+          <section className="mt-10 max-w-lg mx-auto">
+            <PropositionBox />
+          </section>
         )}
       </section>
     </main>
