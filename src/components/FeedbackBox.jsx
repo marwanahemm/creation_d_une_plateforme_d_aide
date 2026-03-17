@@ -3,6 +3,19 @@
 import { useState, useEffect } from 'react'
 import { ThumbsUp, ThumbsDown, Heart } from 'lucide-react'
 
+// --- Helpers pour lire les cookies côté client ---
+
+function getCookie(name) {
+  if (typeof document === 'undefined') return null
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'))
+  return match ? decodeURIComponent(match[2]) : null
+}
+
+function setCookieClient(name, value, days = 30) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString()
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict`
+}
+
 export default function FeedbackBox({ tutorielId, couleur }) {
 
   const [dejaVote, setDejaVote]       = useState(false)
@@ -11,15 +24,24 @@ export default function FeedbackBox({ tutorielId, couleur }) {
   const [commentaire, setCommentaire] = useState('')
   const [envoye, setEnvoye]           = useState(false)
 
-  const storageKey = `feedback_${tutorielId}`
+  const cookieName = `feedback_${tutorielId}`
+
+  // --- Au chargement : vérifie si un cookie de vote existe ---
 
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey)
+    const saved = getCookie(cookieName)
     if (saved !== null) {
       setDejaVote(true)
       setReponse(saved === 'true')
     }
-  }, [storageKey])
+
+    const commentaireSaved = getCookie(`${cookieName}_commentaire`)
+    if (commentaireSaved) {
+      setEnvoye(true)
+    }
+  }, [cookieName])
+
+  // --- Vote ---
 
   const handleVote = async (utile) => {
     setLoading(true)
@@ -30,9 +52,13 @@ export default function FeedbackBox({ tutorielId, couleur }) {
         body: JSON.stringify({ tutoriel_id: tutorielId, utile }),
       })
       if (res.ok) {
-        localStorage.setItem(storageKey, String(utile))
+        // Le cookie posé par le serveur dans la réponse,
+        // met aussi à jour l'état local
         setDejaVote(true)
         setReponse(utile)
+      } else if (res.status === 409) {
+        // Déjà voté (cookie côté serveur détecté)
+        setDejaVote(true)
       }
     } catch (err) {
       console.error('Erreur feedback:', err)
@@ -40,26 +66,42 @@ export default function FeedbackBox({ tutorielId, couleur }) {
     setLoading(false)
   }
 
+  // --- Commentaire ---
+
   const handleCommentaire = async () => {
     if (!commentaire.trim()) return
     setLoading(true)
     try {
-      await fetch('/api/feedbacks', {
+      const res = await fetch('/api/feedbacks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tutoriel_id: tutorielId, utile: reponse, commentaire }),
+        body: JSON.stringify({
+          tutoriel_id: tutorielId,
+          utile: reponse,
+          commentaire,
+        }),
       })
-      setEnvoye(true)
+      if (res.ok) {
+        setEnvoye(true)
+        // Le cookie commentaire est posé par le serveur
+      }
     } catch (err) {
       console.error('Erreur commentaire:', err)
     }
     setLoading(false)
   }
 
-  // --- Après vote : proposer un commentaire ou afficher les remerciements ---
+  // --- Passer le commentaire (sans envoyer) ---
+
+  const handlePasser = () => {
+    setCookieClient(`${cookieName}_commentaire`, 'true')
+    setEnvoye(true)
+  }
+
+  // --- Après vote : propose un commentaire ou affiche les remerciements ---
 
   if (dejaVote) {
-    if (!envoye && !localStorage.getItem(`${storageKey}_commentaire`)) {
+    if (!envoye) {
       return (
         <aside className="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
           <Heart size={22} className="mx-auto mb-2" style={{ color: couleur }} />
@@ -75,10 +117,7 @@ export default function FeedbackBox({ tutorielId, couleur }) {
             className="w-full text-sm border border-slate-200 rounded-xl p-3 resize-none focus:outline-none focus:ring-2 focus:ring-slate-300 bg-white"
           />
           <button
-            onClick={() => {
-              localStorage.setItem(`${storageKey}_commentaire`, 'true')
-              handleCommentaire()
-            }}
+            onClick={handleCommentaire}
             disabled={loading}
             className="mt-2 px-5 py-2 rounded-xl text-sm font-semibold text-white transition-colors disabled:opacity-50"
             style={{ backgroundColor: couleur }}
@@ -86,10 +125,7 @@ export default function FeedbackBox({ tutorielId, couleur }) {
             Envoyer
           </button>
           <button
-            onClick={() => {
-              localStorage.setItem(`${storageKey}_commentaire`, 'true')
-              setEnvoye(true)
-            }}
+            onClick={handlePasser}
             className="mt-2 ml-2 px-4 py-2 rounded-xl text-sm text-slate-400 hover:text-slate-600 transition-colors"
           >
             Passer
@@ -108,6 +144,8 @@ export default function FeedbackBox({ tutorielId, couleur }) {
       </aside>
     )
   }
+
+  // --- État initial : boutons de vote ---
 
   return (
     <aside className="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-center">
