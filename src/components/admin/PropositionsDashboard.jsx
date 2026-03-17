@@ -17,7 +17,10 @@ export default function PropositionsDashboard() {
   const fetchPropositions = async () => {
     try {
       const res = await fetch('/api/admin/propositions')
-      if (!res.ok) throw new Error('Non autorisé')
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || `Erreur ${res.status}`)
+      }
       const data = await res.json()
       setPropositions(data.propositions || [])
     } catch (err) {

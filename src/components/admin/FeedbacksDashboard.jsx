@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ThumbsUp, ThumbsDown, BarChart3, Loader2 } from 'lucide-react'
+import supabase from '@/lib/supabaseClient'
 
 export default function FeedbacksDashboard() {
   const [feedbacks, setFeedbacks] = useState({})
@@ -16,11 +17,14 @@ export default function FeedbacksDashboard() {
         if (!resFb.ok) throw new Error('Non autorisé')
         const dataFb = await resFb.json()
 
-        const resTuto = await fetch('/api')
-        const dataTuto = await resTuto.json()
+        const { data: tutos, error: tutoError } = await supabase
+          .from('tutoriels')
+          .select('id, titre, categorie')
+          .order('id')
+        if (tutoError) throw new Error(tutoError.message)
 
         setFeedbacks(dataFb.feedbacks || {})
-        setTutoriels(dataTuto.resultats || [])
+        setTutoriels(tutos || [])
       } catch (err) {
         setErreur(err.message)
       } finally {
