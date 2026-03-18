@@ -11,6 +11,10 @@ export async function GET() {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
 
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: "Configuration serveur manquante" }, { status: 500 });
+  }
+
   const { data, error } = await supabaseAdmin
     .from("propositions")
     .select("*")
@@ -37,6 +41,10 @@ export async function PATCH(request) {
 
   if (!id || !["nouvelle", "lue", "traitée"].includes(statut)) {
     return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+  }
+
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: "Configuration serveur manquante" }, { status: 500 });
   }
 
   const { error } = await supabaseAdmin
