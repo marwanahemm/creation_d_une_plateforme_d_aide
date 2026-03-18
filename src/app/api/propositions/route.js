@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/supabaseClient";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function POST(request) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request) {
     };
 
     // --- Insérer dans Supabase ---
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("propositions")
       .insert(payload);
 

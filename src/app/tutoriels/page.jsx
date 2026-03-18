@@ -51,7 +51,7 @@ export default function TutorielsPage() {
   })
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', sans-serif" }}>
+    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Marianne', Arial, sans-serif" }}>
 
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <section className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -66,7 +66,7 @@ export default function TutorielsPage() {
       <header className="bg-[#000091] text-white py-10 px-4">
         <section className="max-w-5xl mx-auto">
           <h1 className="text-3xl font-black mb-1">Tutoriels</h1>
-          <p className="text-white/70">Guides pas à pas pour vos démarches administratives en ligne.</p>
+          <p className="text-white/70">Tutoriels pas à pas pour vos démarches administratives en ligne.</p>
           <label className="mt-5 relative max-w-md flex items-center">
             <Search size={16} className="absolute left-3 text-slate-400" />
             <input
