@@ -7,7 +7,6 @@ import {
   Clock, Gauge, ArrowLeft, ArrowRight, Info, ImageOff
 } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
-import FeedbackBox from '@/components/FeedbackBox'
 
 const COULEURS = {
   Santé:     '#0d6efd',
@@ -27,32 +26,29 @@ function Capture({ src, alt, couleur }) {
   const [etat, setEtat] = useState('loading')
   if (!src) return null
   return (
-    <figure className="-mx-6 mt-6 mb-0">
+    <figure className="mt-5 mb-2 m-0">
       {etat === 'error' ? (
-        <div
-          className="flex flex-col items-center justify-center py-14 gap-2"
+        <figcaption
+          className="rounded-xl border-2 border-dashed flex flex-col items-center justify-center py-10 gap-2"
           style={{ borderColor: couleur + '40', background: couleur + '08' }}
         >
-          <ImageOff size={28} style={{ color: couleur + '80' }} />
+          <ImageOff size={24} style={{ color: couleur + '80' }} />
           <span className="text-xs" style={{ color: couleur + '99' }}>{alt}</span>
-        </div>
+        </figcaption>
       ) : (
-        <span className="relative overflow-hidden border-y border-slate-200 block"
-          style={{ background: '#f8f9fc' }}>
-          {etat === 'loading' && (
-            <span className="block bg-slate-100 animate-pulse" style={{ height: '240px' }} />
-          )}
+        <span className="relative rounded-xl overflow-hidden border border-slate-200 shadow-sm block">
+          {etat === 'loading' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-xl block" />}
           <img
             src={src}
             alt={alt}
             onLoad={() => setEtat('ok')}
             onError={() => setEtat('error')}
-            className="w-full h-auto block"
+            className="w-full h-auto block rounded-xl"
             style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s' }}
           />
           {etat === 'ok' && (
-            <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white"
-              style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.6))' }}>
+            <figcaption className="absolute bottom-0 left-0 right-0 px-3 py-1.5 text-xs text-white"
+              style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.55))' }}>
               {alt}
             </figcaption>
           )}
@@ -114,7 +110,7 @@ export default function TutorielDetail({ params }) {
   const termine    = etapes?.length > 0 && cochees.size === etapes.length
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Marianne', Arial, sans-serif" }}>
+    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', sans-serif" }}>
 
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <section className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -249,22 +245,25 @@ export default function TutorielDetail({ params }) {
               {termine && (
                 <aside className="mt-4 bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
                   <CheckCircle size={28} className="text-green-600 mx-auto mb-2" />
-                  <p className="font-bold text-green-800 mb-1">Bravo, vous avez terminé ce tutoriel !</p>
+                  <p className="font-bold text-green-800 mb-3">Bravo, vous avez terminé ce guide !</p>
+                  {lien && (
+                    <a href={lien} target="_blank" rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-all"
+                      style={{ backgroundColor: couleur }}>
+                      Accéder au site officiel <ExternalLink size={13} />
+                    </a>
+                  )}
                 </aside>
               )}
 
-              {lien && (
-                <div className="mt-4 flex justify-center">
+              {!termine && lien && (
+                <p className="mt-3 flex justify-end">
                   <a href={lien} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: couleur }}>
-                    <ExternalLink size={15} />
-                    Accéder au site officiel
+                    className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-[#000091] transition-colors">
+                    Site officiel <ExternalLink size={11} />
                   </a>
-                </div>
+                </p>
               )}
-
-              <FeedbackBox tutorielId={tutoriel.id} couleur={couleur} />
             </section>
           </section>
         )}

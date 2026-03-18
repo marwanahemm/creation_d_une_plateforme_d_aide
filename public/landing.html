@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Démarches Administratives — Site non officiel</title>
+  <title>Démarches Administratives — Vos démarches, enfin simples</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="landing.css" />
 </head>
 <body>
@@ -15,12 +18,12 @@
     <header class="nav-inner">
       <a href="#" class="nav-logo">
         <span class="nav-logo-bar"></span>
-        Plateforme de Démarches Administratives
+        Démarches Administratives
       </a>
 
       <ul class="nav-links">
         <li><a href="#probleme" class="nav-link">Le constat</a></li>
-        <li><a href="#tutoriels" class="nav-link">Les tutoriels</a></li>
+        <li><a href="#guides" class="nav-link">Les guides</a></li>
         <li><a href="#comment" class="nav-link">Comment ça marche</a></li>
         <li><a href="#confiance" class="nav-link">Confiance</a></li>
         <li><a href="/tutoriels" class="nav-cta-btn">Accéder aux tutoriels →</a></li>
@@ -34,7 +37,7 @@
 
   <ul class="nav-mobile" id="navMobile">
     <li><a href="#probleme" onclick="toggleMenu()">Le constat</a></li>
-    <li><a href="#tutoriels" onclick="toggleMenu()">Les tutoriels</a></li>
+    <li><a href="#guides" onclick="toggleMenu()">Les guides</a></li>
     <li><a href="#comment" onclick="toggleMenu()">Comment ça marche</a></li>
     <li><a href="#confiance" onclick="toggleMenu()">Confiance</a></li>
     <li><a href="/tutoriels" class="nav-cta-btn" style="text-align:center">Accéder aux tutoriels →</a></li>
@@ -55,15 +58,15 @@
             Gratuit · Sans inscription · Accessible
           </p>
 
-          <h1>Vos démarches<br />administratives,<br /><em>Site non officiel.</em></h1>
+          <h1>Vos démarches<br />administratives,<br /><em>enfin simples.</em></h1>
 
           <p class="hero-p">
-            CAF, Ameli, France Travail… Des tutoriels pas à pas pour vous
+            CAF, Ameli, France Travail, impôts… Des guides pas à pas pour vous
             accompagner de la préparation des documents jusqu'au site officiel.
           </p>
 
           <nav class="hero-btns">
-            <a href="/tutoriels" class="btn-primary">Choisir mon tutoriel →</a>
+            <a href="/tutoriels" class="btn-primary">Choisir ma démarche →</a>
             <a href="#comment" class="btn-secondary">Comment ça marche</a>
           </nav>
         </header>
@@ -77,7 +80,7 @@
           </figcaption>
 
           <ul class="mockup-body">
-            <li class="mockup-title">Vos tutoriels disponibles</li>
+            <li class="mockup-title">Vos guides disponibles</li>
 
             <li class="mockup-item">
               <span class="mockup-item-icon icon-red">
@@ -87,6 +90,7 @@
                 <strong class="mockup-item-name">Ameli — Assurance Maladie</strong>
                 <small class="mockup-item-sub">Santé · 10 min</small>
               </span>
+              <mark class="mockup-pill pill-green">Facile</mark>
             </li>
 
             <li class="mockup-item">
@@ -97,6 +101,7 @@
                 <strong class="mockup-item-name">CAF — Allocations familiales</strong>
                 <small class="mockup-item-sub">Famille · 15 min</small>
               </span>
+              <mark class="mockup-pill pill-orange">Moyen</mark>
             </li>
 
             <li class="mockup-item">
@@ -107,6 +112,7 @@
                 <strong class="mockup-item-name">France Travail — Emploi</strong>
                 <small class="mockup-item-sub">Emploi · 20 min</small>
               </span>
+              <mark class="mockup-pill pill-orange">Moyen</mark>
             </li>
           </ul>
         </figure>
@@ -120,11 +126,11 @@
     <aside class="proof">
       <ul class="proof-inner">
         <li class="proof-item">
-          <strong class="proof-num">3</strong>
-          <span class="proof-label">Tutoriels disponibles</span>
+          <strong class="proof-num">6</strong>
+          <span class="proof-label">Guides disponibles</span>
         </li>
         <li class="proof-item">
-          <strong class="proof-num">3</strong>
+          <strong class="proof-num">6</strong>
           <span class="proof-label">Organismes couverts</span>
         </li>
         <li class="proof-item">
@@ -186,23 +192,23 @@
 
       <article class="solution-box section-inner">
         <header>
-          <h3>Notre réponse : des tutoriels clairs, étape par étape.</h3>
-          <p>Chaque tutoriel indique d'abord ce qu'il faut préparer, puis déroule les étapes dans l'ordre, et finit par un lien vers le site officiel.</p>
+          <h3>Notre réponse : des guides clairs, étape par étape.</h3>
+          <p>Chaque guide indique d'abord ce qu'il faut préparer, puis déroule les étapes dans l'ordre, et finit par un lien vers le site officiel.</p>
         </header>
-        <a href="/tutoriels" class="btn-primary">Voir les tutoriels →</a>
+        <a href="/tutoriels" class="btn-primary">Voir les guides →</a>
       </article>
     </section>
 
 
-    <!-- ═══════ LES TUTORIELS ═══════ -->
+    <!-- ═══════ LES GUIDES ═══════ -->
 
-    <section class="section" id="tutoriels">
+    <section class="section" id="guides">
       <header class="section-inner guides-header">
         <hgroup>
           <span class="section-label">Les tutoriels</span>
           <h2 class="section-h2">Quelle démarche<br /><em>vous concerne ?</em></h2>
         </hgroup>
-        <a href="/tutoriels" class="guides-link">Voir tous les tutoriels →</a>
+        <a href="/tutoriels" class="guides-link">Voir tous les guides →</a>
       </header>
 
       <ul class="guides-grid section-inner">
@@ -216,6 +222,7 @@
             <h3>Ameli — Assurance Maladie</h3>
             <p>Créez votre compte Ameli, suivez vos remboursements et téléchargez vos attestations.</p>
             <footer class="guide-meta">
+              <mark class="guide-badge badge-deb">Débutant</mark>
               <mark class="guide-badge badge-time">10 min</mark>
             </footer>
             <span class="guide-go">Commencer →</span>
@@ -231,6 +238,7 @@
             <h3>CAF — Allocations Familiales</h3>
             <p>Accédez à vos droits, déclarez vos ressources et gérez vos allocations en ligne.</p>
             <footer class="guide-meta">
+              <mark class="guide-badge badge-int">Intermédiaire</mark>
               <mark class="guide-badge badge-time">15 min</mark>
             </footer>
             <span class="guide-go">Commencer →</span>
@@ -246,6 +254,7 @@
             <h3>France Travail — Emploi</h3>
             <p>Inscrivez-vous, actualisez votre situation et accédez à vos droits chômage.</p>
             <footer class="guide-meta">
+              <mark class="guide-badge badge-int">Intermédiaire</mark>
               <mark class="guide-badge badge-time">20 min</mark>
             </footer>
             <span class="guide-go">Commencer →</span>
@@ -274,8 +283,8 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             </span>
           </header>
-          <h3>Choisissez un tutoriel</h3>
-          <p>Parcourez les tutoriels et sélectionnez celui qui vous concerne.</p>
+          <h3>Choisissez un guide</h3>
+          <p>Parcourez les guides et sélectionnez la démarche qui vous concerne.</p>
         </li>
 
         <li class="step-card">
@@ -286,7 +295,7 @@
             </span>
           </header>
           <h3>Préparez vos documents</h3>
-          <p>Chaque tutoriel commence par la liste des informations à avoir sous la main.</p>
+          <p>Chaque guide commence par la liste des informations à avoir sous la main.</p>
         </li>
 
         <li class="step-card">
@@ -331,7 +340,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
           </span>
           <h3>Contenu vérifié</h3>
-          <p>Chaque tutoriel est basé sur les procédures officielles des organismes concernés : Ameli, CAF, France Travail.</p>
+          <p>Chaque guide est basé sur les procédures officielles des organismes concernés : Ameli, CAF, France Travail.</p>
         </li>
 
         <li class="trust-card">
@@ -355,7 +364,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           </span>
           <h3>Liens officiels uniquement</h3>
-          <p>Chaque tutoriel renvoie vers les sites gouvernementaux officiels.</p>
+          <p>Chaque guide renvoie vers les sites gouvernementaux officiels.</p>
         </li>
 
       </ul>
@@ -366,8 +375,8 @@
 
     <section class="cta-final">
       <h2>Prêt à simplifier<br />votre démarche ?</h2>
-      <p>Choisissez un tutoriel et commencez maintenant. C'est gratuit, sans compte, sans engagement.</p>
-      <a href="/tutoriels" class="cta-final-btn">Accéder aux tutoriels →</a>
+      <p>Choisissez un guide et commencez maintenant. C'est gratuit, sans compte, sans engagement.</p>
+      <a href="/tutoriels" class="cta-final-btn">Accéder aux guides →</a>
     </section>
 
 
@@ -388,7 +397,7 @@
       <a href="https://www.ameli.fr" target="_blank">Ameli</a>
     </nav>
 
-    <small class="footer-copy">© 2026 — Projet Titre Professionnel</small>
+    <small class="footer-copy">© 2026 — Projet Titre Professionnel Bac+2</small>
   </footer>
 
   <script src="landing.js"></script>

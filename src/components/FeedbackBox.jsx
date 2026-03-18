@@ -156,14 +156,14 @@ export default function FeedbackBox({ tutorielId, couleur }) {
         <button
           onClick={() => handleVote(true)}
           disabled={loading}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border-2 border-green-300 text-green-700 bg-green-50 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border-2 border-green-200 text-green-700 bg-green-50 hover:bg-green-100 transition-colors disabled:opacity-50"
         >
           <ThumbsUp size={16} /> Oui
         </button>
         <button
           onClick={() => handleVote(false)}
           disabled={loading}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border-2 border-red-300 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold border-2 border-red-200 text-red-600 bg-red-50 hover:bg-red-100 transition-colors disabled:opacity-50"
         >
           <ThumbsDown size={16} /> Non
         </button>
