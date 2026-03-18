@@ -18,6 +18,13 @@ export async function GET() {
 
   // --- Récupérer tous les feedbacks ---
 
+  if (!supabaseAdmin) {
+    return NextResponse.json(
+      { error: "Configuration serveur manquante" },
+      { status: 500 }
+    );
+  }
+
   const { data, error } = await supabaseAdmin
     .from("feedbacks")
     .select("tutoriel_id, utile, commentaire, created_at")
