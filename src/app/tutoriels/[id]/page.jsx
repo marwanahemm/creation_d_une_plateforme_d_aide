@@ -27,29 +27,29 @@ function Capture({ src, alt, couleur }) {
   const [etat, setEtat] = useState('loading')
   if (!src) return null
   return (
-    <figure className="mt-5 mb-2 m-0">
+    <figure className="mt-6 mb-2 m-0">
       {etat === 'error' ? (
         <figcaption
-          className="rounded-xl border-2 border-dashed flex flex-col items-center justify-center py-10 gap-2"
+          className="rounded-2xl border-2 border-dashed flex flex-col items-center justify-center py-16 gap-2"
           style={{ borderColor: couleur + '40', background: couleur + '08' }}
         >
-          <ImageOff size={24} style={{ color: couleur + '80' }} />
+          <ImageOff size={28} style={{ color: couleur + '80' }} />
           <span className="text-xs" style={{ color: couleur + '99' }}>{alt}</span>
         </figcaption>
       ) : (
-        <span className="relative rounded-xl overflow-hidden border border-slate-200 shadow-sm block">
-          {etat === 'loading' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-xl block" />}
+        <span className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md block" style={{ minHeight: etat === 'loading' ? '220px' : 'auto' }}>
+          {etat === 'loading' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-2xl block" />}
           <img
             src={src}
             alt={alt}
             onLoad={() => setEtat('ok')}
             onError={() => setEtat('error')}
-            className="w-full h-auto block rounded-xl"
-            style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s' }}
+            className="w-full h-auto block rounded-2xl"
+            style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s', maxHeight: '520px', objectFit: 'contain' }}
           />
           {etat === 'ok' && (
-            <figcaption className="absolute bottom-0 left-0 right-0 px-3 py-1.5 text-xs text-white"
-              style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.55))' }}>
+            <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white"
+              style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.6))' }}>
               {alt}
             </figcaption>
           )}
@@ -101,7 +101,7 @@ export default function TutorielDetail({ params }) {
   if (!tutoriel) return (
     <main className="text-center py-20 text-slate-400">
       <p className="font-medium">Tutoriel non trouvé</p>
-      <Link href="/tutoriels" className="mt-2 text-sm text-[#000091] hover:underline block">← Retour aux tutoriels</Link>
+      <Link href="/tutoriels" className="mt-2 text-sm text-[#000091] hover:underline block">← Retour aux guides</Link>
     </main>
   )
 
@@ -126,7 +126,7 @@ export default function TutorielDetail({ params }) {
       <article className="max-w-4xl mx-auto px-4 py-8">
 
         <Link href="/tutoriels" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors">
-          <ChevronLeft size={15} /> Retour aux tutoriels
+          <ChevronLeft size={15} /> Retour aux guides
         </Link>
 
         {/* En-tête */}
@@ -258,18 +258,11 @@ export default function TutorielDetail({ params }) {
               )}
 
               {!termine && lien && (
-                <p className="mt-3 flex justify-end">
+                <p className="mt-4 flex justify-end">
                   <a href={lien} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-[#000091] transition-colors">
-                    Site officiel <ExternalLink size={11} />
-                  </a>
-                </p>
-              )}
-              {!termine && lien && (
-                <p className="mt-3 flex justify-end">
-                  <a href={lien} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-[#000091] transition-colors">
-                    Site officiel <ExternalLink size={11} />
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                    style={{ backgroundColor: couleur }}>
+                    Accéder au site officiel <ExternalLink size={14} />
                   </a>
                 </p>
               )}
