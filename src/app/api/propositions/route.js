@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import supabase from "@/lib/supabaseClient";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function POST(request) {
   try {
@@ -21,14 +21,18 @@ export async function POST(request) {
     };
 
     // --- Insérer dans Supabase ---
-    const { error } = await supabase
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: "Configuration serveur manquante." }, { status: 500 });
+    }
+
+    const { error } = await supabaseAdmin
       .from("propositions")
       .insert(payload);
 
     if (error) {
       console.error("Erreur Supabase proposition:", error);
       return NextResponse.json(
-        { error: "Erreur lors de l'enregistrement." },
+        { error: "Erreur lors de l'enregistrement.", detail: error.message, code: error.code },
         { status: 500 }
       );
     }

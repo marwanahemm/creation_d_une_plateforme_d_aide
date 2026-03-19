@@ -31,7 +31,7 @@ export default function PropositionBox() {
         setDescription('')
       } else {
         const data = await res.json()
-        setErreur(data.error || 'Une erreur est survenue.')
+        setErreur((data.error || 'Une erreur est survenue.') + (data.detail ? ` [${data.code}: ${data.detail}]` : ''))
       }
     } catch {
       setErreur('Impossible d\'envoyer la proposition.')
@@ -62,7 +62,7 @@ export default function PropositionBox() {
         </p>
         <button
           onClick={() => setOuvert(true)}
-          className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-[#000091] hover:bg-[#1212ff] transition-colors"
+          className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-[#000091] hover:bg-[#1212ff] hover:shadow-md transition-all cursor-pointer"
         >
           Proposer un tutoriel
         </button>
@@ -113,7 +113,7 @@ export default function PropositionBox() {
           <button
             type="submit"
             disabled={loading || !sujet.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#000091] hover:bg-[#1212ff] transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-[#000091] hover:bg-[#1212ff] hover:shadow-md transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send size={14} />
             {loading ? 'Envoi...' : 'Envoyer'}
@@ -121,7 +121,7 @@ export default function PropositionBox() {
           <button
             type="button"
             onClick={() => { setOuvert(false); setSujet(''); setDescription(''); setErreur(''); }}
-            className="px-4 py-2.5 rounded-xl text-sm text-slate-500 hover:text-slate-700 transition-colors"
+            className="px-4 py-2.5 rounded-xl text-sm text-slate-500 hover:text-slate-700 transition-colors cursor-pointer"
           >
             Annuler
           </button>

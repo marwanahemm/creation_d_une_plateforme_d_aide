@@ -38,6 +38,8 @@
 
 html { scroll-behavior: smooth; }
 
+section[id], aside[id] { scroll-margin-top: var(--nav-h); }
+
 body {
   font-family: 'Source Sans 3', 'Trebuchet MS', Arial, sans-serif;
   background: var(--blanc);
@@ -117,7 +119,7 @@ a { text-decoration: none; color: inherit; }
   cursor: pointer; padding: 4px;
 }
 .nav-burger span {
-  width: 24px; height: 2px; background: var(--gris-titre);
+  width: 24px; height: 2px; background: var(--bleu-france);
   border-radius: 2px; transition: .3s;
 }
 .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -125,12 +127,54 @@ a { text-decoration: none; color: inherit; }
 .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 .nav-mobile {
-  display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
-  background: var(--blanc); border-bottom: 2px solid var(--bleu-france);
-  padding: 20px 24px; flex-direction: column; gap: 16px; z-index: 99;
+  display: flex;
+  flex-direction: column;
+  position: fixed; top: var(--nav-h); left: 0; right: 0;
+  background: var(--blanc);
+  border-bottom: 3px solid var(--bleu-france);
+  z-index: 99;
+  box-shadow: 0 12px 32px rgba(0,0,83,.12);
+  /* État fermé */
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s;
 }
-.nav-mobile.open { display: flex; }
-.nav-mobile a { font-weight: 600; font-size: 1rem; color: var(--gris-titre); }
+.nav-mobile.open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Liens du menu mobile */
+.nav-mobile li { border-bottom: 1px solid var(--gris-bordure); }
+.nav-mobile li:last-child { border-bottom: none; padding: 16px 24px; }
+.nav-mobile a {
+  display: block;
+  font-weight: 600; font-size: 1rem; color: var(--gris-titre);
+  padding: 16px 24px;
+  transition: background .15s, color .15s;
+}
+.nav-mobile a:not(.nav-cta-btn):hover {
+  background: var(--bleu-surface);
+  color: var(--bleu-france);
+}
+
+/* Bouton CTA dans le menu mobile */
+.nav-mobile .nav-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--blanc);
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+.nav-mobile .nav-cta-btn:hover {
+  background: var(--bleu-hover);
+  color: var(--blanc);
+}
 
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -496,11 +540,6 @@ a { text-decoration: none; color: inherit; }
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 32px 24px;
-  transition: box-shadow .3s, border-color .3s;
-}
-.trust-card:hover {
-  box-shadow: 0 8px 30px rgba(0,0,0,.06);
-  border-color: var(--bleu-clair);
 }
 .trust-icon {
   width: 52px; height: 52px; border-radius: 14px;

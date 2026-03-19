@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BookOpen, Clock, Award, Search, HeartPulse, Baby, Briefcase, FileText, ShieldCheck } from 'lucide-react'
+import { BookOpen, Clock, Search, HeartPulse, Baby, Briefcase, FileText, ShieldCheck } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
 import PropositionBox from '@/components/PropositionBox'
 
@@ -22,11 +22,6 @@ const COULEURS = {
   Sécurité:  '#f4a261',
 }
 
-const DIFF_STYLE = {
-  'débutant':      'bg-green-50 text-green-700 border border-green-200',
-  'intermédiaire': 'bg-orange-50 text-orange-700 border border-orange-200',
-  'avancé':        'bg-red-50 text-red-700 border border-red-200',
-}
 
 export default function TutorielsPage() {
   const [tutoriels, setTutoriels]   = useState([])
@@ -65,13 +60,13 @@ export default function TutorielsPage() {
 
       <header className="bg-[#000091] text-white py-10 px-4">
         <section className="max-w-5xl mx-auto">
-          <h1 className="text-3xl font-black mb-1">Tutoriels</h1>
+          <h1 className="text-3xl font-black mb-1">Guides</h1>
           <p className="text-white/70">Guides pas à pas pour vos démarches administratives en ligne.</p>
           <label className="mt-5 relative max-w-md flex items-center">
             <Search size={16} className="absolute left-3 text-slate-400" />
             <input
               type="text"
-              placeholder="Rechercher un tutoriel..."
+              placeholder="Rechercher un guide..."
               value={recherche}
               onChange={e => setRecherche(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm text-slate-800 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000091]"
@@ -117,11 +112,6 @@ export default function TutorielsPage() {
                       <h2 className="font-extrabold text-slate-900 mb-2 group-hover:text-[#000091] transition-colors">{t.titre}</h2>
                       <p className="text-sm text-slate-500 leading-relaxed mb-4 line-clamp-2 flex-1">{t.description}</p>
                       <footer className="flex gap-2 flex-wrap">
-                        {t.difficulte && (
-                          <span className={`text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 ${DIFF_STYLE[t.difficulte] ?? 'bg-slate-100 text-slate-600'}`}>
-                            <Award size={10} /> {t.difficulte}
-                          </span>
-                        )}
                         {t.duree && (
                           <span className="text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-100 text-slate-500">
                             <Clock size={10} /> {t.duree}
@@ -139,7 +129,7 @@ export default function TutorielsPage() {
         {!chargement && resultats.length === 0 && (
           <p className="text-center py-20 text-slate-400">
             <BookOpen size={40} className="text-slate-300 mx-auto mb-4" />
-            Aucun tutoriel pour "{recherche}"
+            Aucun guide pour "{recherche}"
             <button onClick={() => setRecherche('')} className="block mt-2 text-sm text-[#000091] hover:underline mx-auto">
               Effacer la recherche
             </button>
