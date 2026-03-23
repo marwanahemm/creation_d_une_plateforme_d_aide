@@ -52,7 +52,7 @@ export default function TutorielsPage() {
         <section className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-black text-[#000091] text-lg">
             <span className="w-1 h-6 rounded-sm" style={{ background: 'linear-gradient(180deg,#000091 50%,#e1000f 50%)' }} />
-            Démarches Admin
+            Les guides
           </Link>
           <Link href="/" className="text-sm font-bold text-[#000091] hover:underline">Accueil</Link>
         </section>
