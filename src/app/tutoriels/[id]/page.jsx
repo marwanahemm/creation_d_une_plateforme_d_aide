@@ -37,23 +37,27 @@ function Capture({ src, alt, couleur }) {
           <span className="text-xs" style={{ color: couleur + '99' }}>{alt}</span>
         </figcaption>
       ) : (
-        <span className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md block" style={{ minHeight: etat === 'loading' ? '220px' : 'auto' }}>
+        <a href={src} target="_blank" rel="noreferrer"
+          className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md block group cursor-zoom-in"
+          style={{ minHeight: etat === 'loading' ? '220px' : 'auto' }}
+          title="Cliquer pour agrandir">
           {etat === 'loading' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-2xl block" />}
           <img
             src={src}
             alt={alt}
             onLoad={() => setEtat('ok')}
             onError={() => setEtat('error')}
-            className="w-full h-auto block rounded-2xl"
-            style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s', maxHeight: '520px', objectFit: 'contain' }}
+            className="w-full h-auto block rounded-2xl transition-transform duration-200 group-hover:scale-[1.01]"
+            style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s' }}
           />
           {etat === 'ok' && (
-            <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white"
+            <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white flex items-center justify-between"
               style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.6))' }}>
-              {alt}
+              <span>{alt}</span>
+              <span className="opacity-70 text-[10px]">🔍 Cliquer pour agrandir</span>
             </figcaption>
           )}
-        </span>
+        </a>
       )}
     </figure>
   )

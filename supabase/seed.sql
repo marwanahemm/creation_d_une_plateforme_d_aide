@@ -1,28 +1,24 @@
 UPDATE tutoriels
-
 SET etapes = '[
   {
-    "titre": "Aller sur caf.fr",
-    "description": "Ouvrez votre navigateur et tapez caf.fr dans la barre d''adresse. Sur la page d''accueil, repérez le bouton « Créer » dans la section « Créer votre compte », ou identifiez-vous via FranceConnect.",
+    "titre": "Accéder à Mon Compte sur caf.fr",
+    "description": "Rendez-vous sur caf.fr. Cliquez sur le picto « Mon Compte » dans la barre bleue en haut de la page, puis sur « Créer mon compte ». Bon à savoir : la création dure 5 à 10 minutes et comprend 3 étapes. Cliquez sur « Commencer » pour lancer la démarche.",
     "image": "/images/tutoriels/caf/etape_1.png"
   },
   {
-    "titre": "Préparer les documents nécessaires",
-    "description": "Munissez-vous de votre numéro de Sécurité sociale (présent sur votre carte Vitale) et d''une pièce d''identité. La création prend 3 étapes et environ 5 à 10 minutes.",
+    "titre": "Renseigner votre état civil",
+    "description": "Complétez votre état civil : numéro de sécurité sociale, civilité, nom de naissance, prénoms, date et lieu de naissance. Ensuite, renseignez le numéro de votre pièce d''identité (carte d''identité, titre de séjour ou passeport). Sans pièce d''identité française, cliquez sur le lien prévu à cet effet.",
     "image": "/images/tutoriels/caf/etape_2.png"
   },
   {
-    "titre": "Renseigner votre état civil",
-    "description": "Saisissez votre numéro de sécurité sociale (13 caractères). Si vous n''en avez pas, cochez la case correspondante. Tous les champs sont obligatoires sauf mention contraire.",
+    "titre": "Vérifier vos coordonnées de contact",
+    "description": "Choisissez de recevoir un code de vérification par SMS ou par e-mail. Saisissez votre numéro de téléphone ou adresse mail, confirmez-le, puis cliquez sur « Envoyer le code ». Entrez le code reçu et cliquez sur « Valider ».",
     "image": "/images/tutoriels/caf/etape_3.png"
   },
   {
-    "titre": "Saisir vos coordonnées",
-    "description": "Renseignez votre adresse postale, votre numéro de téléphone et votre adresse e-mail. Ces informations serviront pour vos futurs échanges avec la CAF."
-  },
-  {
-    "titre": "Créer votre mot de passe et valider",
-    "description": "Choisissez un mot de passe sécurisé et validez la création de votre compte. Vous recevrez un e-mail de confirmation."
+    "titre": "Choisir un mot de passe et finaliser",
+    "description": "Créez un mot de passe entre 10 et 64 caractères, avec au moins 1 chiffre, 1 majuscule et 1 minuscule. Confirmez-le puis cliquez sur « Continuer ». Vérifiez le récapitulatif de vos informations et cliquez sur « Se connecter » pour accéder à votre espace.",
+    "image": "/images/tutoriels/caf/etape_4.png"
   }
 ]'::jsonb
 WHERE titre LIKE '%CAF%';
@@ -62,28 +58,34 @@ WHERE titre LIKE '%Ameli%';
 UPDATE tutoriels
 SET etapes = '[
   {
-    "titre": "Aller sur francetravail.fr",
-    "description": "Ouvrez votre navigateur et tapez francetravail.fr dans la barre d''adresse. C''est le nouveau nom de Pôle Emploi depuis 2024.",
-    "image": "/images/tutoriels/france-travail/etape_1.png"
+    "titre": "Accéder à la page de connexion",
+    "description": "Ouvrez votre navigateur et rendez-vous sur francetravail.fr. Sur la page de connexion, repérez la mention « Première connexion ? » et cliquez sur « Créer mon compte » juste à côté.",
+    "image": "/images/tutoriels/france-travail/etape_1.jpg"
   },
   {
-    "titre": "Cliquer sur « S''inscrire »",
-    "description": "Sur la page d''accueil, cliquez sur le bouton « S''inscrire / Se réinscrire » pour commencer votre inscription comme demandeur d''emploi.",
-    "image": "/images/tutoriels/france-travail/etape_2.png"
+    "titre": "Préparer vos documents",
+    "description": "Avant de commencer, rassemblez : une pièce d''identité, votre carte Vitale, un justificatif de domicile, votre attestation employeur, vos derniers bulletins de salaire, un RIB et votre CV. Ayez également votre adresse e-mail à portée de main. Une fois prêt, cliquez sur « Valider et continuer ».",
+    "image": "/images/tutoriels/france-travail/etape_2.jpg"
   },
   {
-    "titre": "Remplir le formulaire d''inscription",
-    "description": "Renseignez votre état civil, votre adresse, votre dernier emploi et la raison de la fin de contrat. Ayez votre pièce d''identité et votre attestation employeur sous la main.",
-    "image": "/images/tutoriels/france-travail/etape_3.png"
+    "titre": "Vérifier votre situation",
+    "description": "France Travail vous demande de préciser votre situation actuelle (salarié, indépendant, sans emploi…). Selon votre réponse, vous serez orienté vers le parcours d''inscription adapté ou informé que vous n''êtes pas éligible.",
+    "image": "/images/tutoriels/france-travail/etape_3.jpg"
   },
   {
-    "titre": "Compléter votre profil",
-    "description": "Ajoutez votre CV, vos compétences, votre niveau d''études et votre secteur d''activité pour être visible des recruteurs.",
-    "image": "/images/tutoriels/france-travail/etape_4.png"
+    "titre": "Choisir le motif d''inscription",
+    "description": "Sélectionnez parmi les 4 motifs proposés celui qui correspond à votre situation (fin de CDD, licenciement, démission, etc.) puis cliquez sur « Démarrer l''inscription ».",
+    "image": "/images/tutoriels/france-travail/etape_4.jpg"
   },
   {
-    "titre": "Suivre votre espace chaque mois",
-    "description": "Actualisez votre situation chaque mois entre le 28 et le 15 pour continuer à recevoir vos droits. Consultez aussi vos offres d''emploi personnalisées."
+    "titre": "Remplir votre profil",
+    "description": "Complétez l''ensemble des champs : genre, prénom, nom, date et lieu de naissance, nationalité, adresse postale, situation familiale, numéro de sécurité sociale, régime, téléphone et adresse e-mail. Toutes ces informations sont nécessaires pour finaliser votre dossier.",
+    "image": "/images/tutoriels/france-travail/etape_5.jpg"
+  },
+  {
+    "titre": "Finaliser l''inscription et recevoir vos accès",
+    "description": "Une fois le formulaire validé, vous recevrez vos identifiants par courrier ou e-mail. Connectez-vous ensuite à votre espace personnel pour compléter votre profil, déposer votre CV et consulter vos offres d''emploi personnalisées. Pensez à actualiser votre situation chaque mois.",
+    "image": "/images/tutoriels/france-travail/etape_6.jpg"
   }
 ]'::jsonb
 WHERE titre LIKE '%France Travail%';

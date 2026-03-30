@@ -9,8 +9,8 @@ CREATE TABLE feedbacks (
 -- Index pour accélérer les requêtes par tutoriel
 CREATE INDEX idx_feedbacks_tutoriel_id ON feedbacks(tutoriel_id);
 
--- Permettre à tout le monde d'insérer un feedback (clé anon)
--- mais personne ne peut lire/modifier/supprimer (sauf service role)
+-- Permet à tout le monde d'insérer un feedback (clé anon)
+-- personne ne peut lire/modifier/supprimer (sauf service role)
 ALTER TABLE feedbacks ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tout le monde peut voter"
