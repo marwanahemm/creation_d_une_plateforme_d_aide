@@ -28,12 +28,17 @@ UPDATE tutoriels
 SET etapes = '[
   {
     "titre": "Aller sur ameli.fr",
-    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse. Si demandé, renseignez votre code postal pour accéder aux informations de votre caisse.",
-    "image": "/images/tutoriels/ameli/etape_1.png"
+    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse. Cliquez sur le premier résultat « ameli, le site de l''Assurance Maladie en ligne ».",
+    "image": "/images/tutoriels/ameli/etape_nav.png"
   },
   {
     "titre": "Cliquer sur « Compte ameli »",
-    "description": "Sur la page d''accueil, cliquez sur l''icône « Compte ameli » en haut à droite. Une nouvelle page s''ouvre. Cliquez sur « Créer mon compte » pour commencer.",
+    "description": "Sur la page d''accueil, cliquez sur l''icône « Compte ameli » en haut à droite. Une fenêtre s''ouvre, cliquez sur « Accéder à mon compte ameli ».",
+    "image": "/images/tutoriels/ameli/etape_1.png"
+  },
+  {
+    "titre": "Cliquer sur « Créer un compte » en bas de la page",
+    "description": "Sur la page de connexion « J''accède à mon compte ameli », faites défiler jusqu''en bas et cliquez sur le lien « Créer un compte ».",
     "image": "/images/tutoriels/ameli/etape_2.png"
   },
   {
