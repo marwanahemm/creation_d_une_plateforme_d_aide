@@ -29,32 +29,32 @@ SET etapes = '[
   {
     "titre": "Aller sur ameli.fr",
     "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse. Cliquez sur le premier résultat « ameli, le site de l''Assurance Maladie en ligne ».",
-    "image": "/images/tutoriels/ameli/etape_nav.png"
+    "image": "/images/tutoriels/ameli/etape_1.png"
   },
   {
     "titre": "Cliquer sur « Compte ameli »",
     "description": "Sur la page d''accueil, cliquez sur l''icône « Compte ameli » en haut à droite. Une fenêtre s''ouvre, cliquez sur « Accéder à mon compte ameli ».",
-    "image": "/images/tutoriels/ameli/etape_1.png"
+    "image": "/images/tutoriels/ameli/etape_2.png"
   },
   {
     "titre": "Cliquer sur « Créer un compte » en bas de la page",
     "description": "Sur la page de connexion « J''accède à mon compte ameli », faites défiler jusqu''en bas et cliquez sur le lien « Créer un compte ».",
-    "image": "/images/tutoriels/ameli/etape_2.png"
+    "image": "/images/tutoriels/ameli/etape_3.png"
   },
   {
     "titre": "Renseigner vos informations personnelles",
     "description": "Saisissez votre nom de famille, votre numéro de sécurité sociale (13 chiffres, sans la clé), votre date de naissance et votre code postal. Cliquez sur « Continuer ».",
-    "image": "/images/tutoriels/ameli/etape_3.png"
+    "image": "/images/tutoriels/ameli/etape_4.png"
   },
   {
     "titre": "Confirmer votre identité",
     "description": "Renseignez les 7 derniers chiffres de votre IBAN (présent sur votre RIB). Cette étape permet de vérifier votre identité de manière sécurisée.",
-    "image": "/images/tutoriels/ameli/etape_4.png"
+    "image": "/images/tutoriels/ameli/etape_5.png"
   },
   {
     "titre": "Créer votre mot de passe",
     "description": "Choisissez un mot de passe sécurisé comportant au moins 8 caractères avec majuscule, minuscule et chiffre ou caractère spécial. Validez votre compte via le lien reçu par e-mail.",
-    "image": "/images/tutoriels/ameli/etape_5.png"
+    "image": "/images/tutoriels/ameli/etape_6.png"
   }
 ]'::jsonb
 WHERE titre LIKE '%Ameli%';
