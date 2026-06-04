@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { Lightbulb, Loader2, Eye, CheckCircle, Clock } from 'lucide-react'
 
 const STATUT_STYLE = {
@@ -9,28 +8,7 @@ const STATUT_STYLE = {
   traitée:  { label: 'Traitée',   couleur: 'bg-green-100 text-green-700',  icon: <CheckCircle size={12} /> },
 }
 
-export default function PropositionsDashboard() {
-  const [propositions, setPropositions] = useState([])
-  const [loading, setLoading]           = useState(true)
-  const [erreur, setErreur]             = useState(null)
-
-  const fetchPropositions = async () => {
-    try {
-      const res = await fetch('/api/admin/propositions')
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        throw new Error(body.error || `Erreur ${res.status}`)
-      }
-      const data = await res.json()
-      setPropositions(data.propositions || [])
-    } catch (err) {
-      setErreur(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => { fetchPropositions() }, [])
+export default function PropositionsDashboard({ data, loading, onStatutChange }) {
 
   const changerStatut = async (id, statut) => {
     try {
@@ -39,27 +17,22 @@ export default function PropositionsDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, statut }),
       })
-      if (res.ok) {
-        setPropositions(prev =>
-          prev.map(p => p.id === id ? { ...p, statut } : p)
-        )
+      if (res.ok && onStatutChange) {
+        onStatutChange(prev => prev.map(p => p.id === id ? { ...p, statut } : p))
       }
     } catch (err) {
       console.error('Erreur changement statut:', err)
     }
   }
 
-  if (loading) return (
+  if (loading || data === null) return (
     <p className="flex items-center justify-center gap-2 py-12 text-slate-400 text-sm">
       <Loader2 size={16} className="animate-spin" /> Chargement des propositions…
     </p>
   )
 
-  if (erreur) return (
-    <p className="text-center py-12 text-red-500 text-sm">{erreur}</p>
-  )
-
-  const nbNouvelles = propositions.filter(p => p.statut === 'nouvelle').length
+  const propositions = data
+  const nbNouvelles  = propositions.filter(p => p.statut === 'nouvelle').length
 
   return (
     <section>

@@ -2,20 +2,54 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { LayoutDashboard, ArrowLeft, Lock, Loader2, Lightbulb } from 'lucide-react'
 import FeedbacksDashboard from '@/components/admin/FeedbacksDashboard'
 import PropositionsDashboard from '@/components/admin/PropositionsDashboard'
 
 export default function DashboardPage() {
-  const [auth, setAuth]         = useState(false)
-  const [checking, setChecking] = useState(true)
-  const [onglet, setOnglet]     = useState('feedbacks')
+  const searchParams   = useSearchParams()
+  const tabParam       = searchParams.get('tab')
+
+  const [auth, setAuth]               = useState(false)
+  const [checking, setChecking]       = useState(true)
+  const [onglet, setOnglet]           = useState(tabParam === 'propositions' ? 'propositions' : 'feedbacks')
+  const [feedbacksData, setFeedbacksData]       = useState(null)
+  const [propositionsData, setPropositionsData] = useState(null)
+  const [dataLoading, setDataLoading] = useState(false)
 
   useEffect(() => {
     fetch('/api/admin/session')
-      .then(res => { if (res.ok) setAuth(true); })
+      .then(async res => {
+        if (res.ok) {
+          setAuth(true)
+          await chargerDonnees()
+        }
+      })
       .finally(() => setChecking(false))
   }, [])
+
+  async function chargerDonnees() {
+    setDataLoading(true)
+    try {
+      const [fbRes, propRes] = await Promise.all([
+        fetch('/api/admin/feedbacks'),
+        fetch('/api/admin/propositions'),
+      ])
+      if (fbRes.ok) {
+        const fbData = await fbRes.json()
+        setFeedbacksData(fbData.feedbacks || {})
+      }
+      if (propRes.ok) {
+        const propData = await propRes.json()
+        setPropositionsData(propData.propositions || [])
+      }
+    } catch (err) {
+      console.error('Erreur chargement données dashboard :', err)
+    } finally {
+      setDataLoading(false)
+    }
+  }
 
   if (checking) return (
     <main className="min-h-screen flex items-center justify-center bg-slate-100">
@@ -82,7 +116,10 @@ export default function DashboardPage() {
 
         {/* Contenu */}
         <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          {onglet === 'feedbacks' ? <FeedbacksDashboard /> : <PropositionsDashboard />}
+          {onglet === 'feedbacks'
+            ? <FeedbacksDashboard data={feedbacksData} loading={dataLoading} />
+            : <PropositionsDashboard data={propositionsData} loading={dataLoading} onStatutChange={setPropositionsData} />
+          }
         </section>
       </article>
     </main>

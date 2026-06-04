@@ -1,65 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { ThumbsUp, ThumbsDown, BarChart3, Loader2, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react'
-import supabase from '@/lib/supabaseClient'
+import { useState } from 'react'
 
-export default function FeedbacksDashboard() {
-  const [feedbacks, setFeedbacks]   = useState({})
-  const [tutoriels, setTutoriels]   = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [erreur, setErreur]         = useState(null)
-  const [expanded, setExpanded]     = useState({})
-
+export default function FeedbacksDashboard({ data, loading }) {
+  const [expanded, setExpanded] = useState({})
   const toggleExpanded = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }))
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const resFb = await fetch('/api/admin/feedbacks')
-        if (!resFb.ok) throw new Error('Non autorisé')
-        const dataFb = await resFb.json()
-
-        const { data: tutos, error: tutoError } = await supabase
-          .from('tutoriels')
-          .select('id, titre, categorie')
-          .order('id')
-        if (tutoError) throw new Error(tutoError.message)
-
-        setFeedbacks(dataFb.feedbacks || {})
-        setTutoriels(tutos || [])
-      } catch (err) {
-        setErreur(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
-
-  if (loading) return (
+  if (loading || data === null) return (
     <p className="flex items-center justify-center gap-2 py-12 text-slate-400 text-sm">
       <Loader2 size={16} className="animate-spin" /> Chargement des retours…
     </p>
   )
 
-  if (erreur) return (
-    <p className="text-center py-12 text-red-500 text-sm">
-      {erreur === 'Non autorisé'
-        ? 'Connectez-vous sur /admin pour accéder aux feedbacks.'
-        : `Erreur : ${erreur}`}
-    </p>
-  )
+  const feedbacks = data
 
   const totalPositifs = Object.values(feedbacks).reduce((s, f) => s + (f.positifs || 0), 0)
   const totalNegatifs = Object.values(feedbacks).reduce((s, f) => s + (f.negatifs || 0), 0)
-  const totalVotes = totalPositifs + totalNegatifs
+  const totalVotes    = totalPositifs + totalNegatifs
 
-  const lignes = tutoriels.map(t => {
-    const fb = feedbacks[t.id] || { positifs: 0, negatifs: 0 }
-    const total = fb.positifs + fb.negatifs
-    const pct = total > 0 ? Math.round((fb.positifs / total) * 100) : null
-    return { ...t, ...fb, total, pct }
+  // Construire les lignes à partir des clés du feedback (id = tutoriel_id)
+  const lignes = Object.entries(feedbacks).map(([id, fb]) => {
+    const total = (fb.positifs || 0) + (fb.negatifs || 0)
+    const pct   = total > 0 ? Math.round((fb.positifs / total) * 100) : null
+    return { id, ...fb, total, pct }
   }).sort((a, b) => b.total - a.total)
 
   return (
@@ -88,7 +52,7 @@ export default function FeedbacksDashboard() {
       <h3 className="text-sm font-bold text-slate-700 mb-3">Détail par tutoriel</h3>
 
       {lignes.length === 0 ? (
-        <p className="text-sm text-slate-400 text-center py-8">Aucun tutoriel trouvé.</p>
+        <p className="text-sm text-slate-400 text-center py-8">Aucun feedback reçu pour l'instant.</p>
       ) : (
         <ul className="space-y-2 list-none p-0">
           {lignes.map(t => {
@@ -99,8 +63,7 @@ export default function FeedbacksDashboard() {
                 {/* Ligne principale */}
                 <div className="px-5 py-4 flex items-center gap-4">
                   <article className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-800 truncate">{t.titre}</p>
-                    <p className="text-xs text-slate-400">{t.categorie}</p>
+                    <p className="text-sm font-semibold text-slate-800 truncate">Tutoriel #{t.id}</p>
                   </article>
 
                   {t.total > 0 ? (
@@ -116,10 +79,10 @@ export default function FeedbacksDashboard() {
 
                   <nav className="flex items-center gap-3 shrink-0">
                     <span className="flex items-center gap-1 text-xs font-semibold text-green-600">
-                      <ThumbsUp size={12} /> {t.positifs}
+                      <ThumbsUp size={12} /> {t.positifs || 0}
                     </span>
                     <span className="flex items-center gap-1 text-xs font-semibold text-red-500">
-                      <ThumbsDown size={12} /> {t.negatifs}
+                      <ThumbsDown size={12} /> {t.negatifs || 0}
                     </span>
                   </nav>
 
