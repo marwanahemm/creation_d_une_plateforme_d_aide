@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 const EMPTY_FORM = {
-  titre: "", categorie: "", difficulte: "débutant",
+  titre: "", categorie: "",
   duree: "", description: "", lien: "", infos: "", etapes: "",
 };
 
@@ -243,22 +243,6 @@ export default function AdminPage() {
                 <span className="block text-xs font-semibold text-[#161616] mb-1">Catégorie *</span>
                 <input required value={form.categorie} onChange={e => setForm({...form, categorie: e.target.value})}
                   placeholder="Ex: Santé" className={inputClass} />
-              </label>
-            </fieldset>
-
-            <fieldset className="grid grid-cols-2 gap-4 mb-4">
-              <label className="block">
-                <span className="block text-xs font-semibold text-[#161616] mb-1">Difficulté</span>
-                <select value={form.difficulte} onChange={e => setForm({...form, difficulte: e.target.value})} className={inputClass}>
-                  <option value="débutant">Débutant</option>
-                  <option value="intermédiaire">Intermédiaire</option>
-                  <option value="avancé">Avancé</option>
-                </select>
-              </label>
-              <label className="block">
-                <span className="block text-xs font-semibold text-[#161616] mb-1">Durée</span>
-                <input value={form.duree} onChange={e => setForm({...form, duree: e.target.value})}
-                  placeholder="Ex: 10 min" className={inputClass} />
               </label>
             </fieldset>
 
