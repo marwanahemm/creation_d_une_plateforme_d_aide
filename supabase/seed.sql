@@ -27,29 +27,24 @@ WHERE titre LIKE '%CAF%';
 UPDATE tutoriels
 SET etapes = '[
   {
-    "titre": "Aller sur ameli.fr",
-    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse. Si demandé, renseignez votre code postal pour accéder aux informations de votre caisse.",
+    "titre": "Accéder à ameli.fr",
+    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse, puis appuyez sur Entrée.",
     "image": "/images/tutoriels/ameli/etape_1.png"
   },
   {
-    "titre": "Cliquer sur « Compte ameli »",
-    "description": "Sur la page d''accueil, cliquez sur l''icône « Compte ameli » en haut à droite. Une nouvelle page s''ouvre. Cliquez sur « Créer mon compte » pour commencer.",
-    "image": "/images/tutoriels/ameli/etape_2.png"
+    "titre": "Choisir « Mon compte ameli »",
+    "description": "Une fenêtre s''affiche : « À quel service souhaitez-vous vous connecter ? ». Cliquez sur « Accéder à mon compte ameli » pour consulter vos remboursements et faciliter vos démarches.",
+    "image": "/images/tutoriels/ameli/etape_2 .png"
   },
   {
-    "titre": "Renseigner vos informations personnelles",
-    "description": "Saisissez votre nom de famille, votre numéro de sécurité sociale (13 chiffres, sans la clé), votre date de naissance et votre code postal. Cliquez sur « Continuer ».",
+    "titre": "Créer votre compte",
+    "description": "Sur la page de connexion, saisissez votre numéro de sécurité sociale et votre mot de passe, puis cliquez sur « Me connecter ». Si c''est votre première visite, cliquez sur « Créer un compte » en bas de page. Vous pouvez aussi utiliser FranceConnect.",
     "image": "/images/tutoriels/ameli/etape_3.png"
   },
   {
-    "titre": "Confirmer votre identité",
-    "description": "Renseignez les 7 derniers chiffres de votre IBAN (présent sur votre RIB). Cette étape permet de vérifier votre identité de manière sécurisée.",
+    "titre": "Renseigner vos informations personnelles",
+    "description": "Saisissez votre nom de famille (sans prénom), votre numéro de sécurité sociale, votre date de naissance et votre code postal. Une fois les champs remplis, cliquez sur « Continuer ».",
     "image": "/images/tutoriels/ameli/etape_4.png"
-  },
-  {
-    "titre": "Créer votre mot de passe",
-    "description": "Choisissez un mot de passe sécurisé comportant au moins 8 caractères avec majuscule, minuscule et chiffre ou caractère spécial. Validez votre compte via le lien reçu par e-mail.",
-    "image": "/images/tutoriels/ameli/etape_5.png"
   }
 ]'::jsonb
 WHERE titre LIKE '%Ameli%';
@@ -58,34 +53,49 @@ WHERE titre LIKE '%Ameli%';
 UPDATE tutoriels
 SET etapes = '[
   {
-    "titre": "Accéder à la page de connexion",
-    "description": "Ouvrez votre navigateur et rendez-vous sur francetravail.fr. Sur la page de connexion, repérez la mention « Première connexion ? » et cliquez sur « Créer mon compte » juste à côté.",
-    "image": "/images/tutoriels/france-travail/etape_1.jpg"
+    "titre": "Accéder à francetravail.fr",
+    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez francetravail.fr dans la barre d''adresse, puis appuyez sur Entrée.",
+    "image": "/images/tutoriels/france-travail/Etape 1 barre de recherche.png"
   },
   {
-    "titre": "Préparer vos documents",
-    "description": "Avant de commencer, rassemblez : une pièce d''identité, votre carte Vitale, un justificatif de domicile, votre attestation employeur, vos derniers bulletins de salaire, un RIB et votre CV. Ayez également votre adresse e-mail à portée de main. Une fois prêt, cliquez sur « Valider et continuer ».",
-    "image": "/images/tutoriels/france-travail/etape_2.jpg"
+    "titre": "Cliquer sur « Connexion » puis « Candidat »",
+    "description": "Sur la page d''accueil de France Travail, cliquez sur le bouton « Connexion » en haut à droite. Un menu déroulant apparaît : sélectionnez « Candidat ».",
+    "image": "/images/tutoriels/france-travail/Etape 2 page d''accueil.png"
   },
   {
-    "titre": "Vérifier votre situation",
-    "description": "France Travail vous demande de préciser votre situation actuelle (salarié, indépendant, sans emploi…). Selon votre réponse, vous serez orienté vers le parcours d''inscription adapté ou informé que vous n''êtes pas éligible.",
-    "image": "/images/tutoriels/france-travail/etape_3.jpg"
+    "titre": "Se connecter ou créer un compte",
+    "description": "Saisissez votre identifiant et votre mot de passe, puis cliquez sur « Se connecter ». Si vous n''avez pas encore de compte, cliquez sur « Créer un compte » en bas de page, ou utilisez FranceConnect pour vous identifier avec vos identifiants d''un autre service de l''État.",
+    "image": "/images/tutoriels/france-travail/Etape 3 page de connection.png"
   },
   {
-    "titre": "Choisir le motif d''inscription",
-    "description": "Sélectionnez parmi les 4 motifs proposés celui qui correspond à votre situation (fin de CDD, licenciement, démission, etc.) puis cliquez sur « Démarrer l''inscription ».",
-    "image": "/images/tutoriels/france-travail/etape_4.jpg"
+    "titre": "Choisir de vous inscrire comme demandeur d''emploi",
+    "description": "France Travail vous demande ce que vous souhaitez faire. Sélectionnez « Vous inscrire comme demandeur d''emploi : vous souhaitez effectuer votre demande d''inscription », puis cliquez sur « Poursuivre ».",
+    "image": "/images/tutoriels/france-travail/Etape 4 inscription.jpg"
   },
   {
-    "titre": "Remplir votre profil",
-    "description": "Complétez l''ensemble des champs : genre, prénom, nom, date et lieu de naissance, nationalité, adresse postale, situation familiale, numéro de sécurité sociale, régime, téléphone et adresse e-mail. Toutes ces informations sont nécessaires pour finaliser votre dossier.",
+    "titre": "Vérifier si vous pouvez vous inscrire en ligne",
+    "description": "À la première étape de votre demande d''inscription, sélectionnez votre situation dans la liste déroulante pour vérifier votre éligibilité à l''inscription en ligne. Cliquez ensuite sur « Valider et continuer ».",
     "image": "/images/tutoriels/france-travail/etape_5.jpg"
   },
   {
-    "titre": "Finaliser l''inscription et recevoir vos accès",
-    "description": "Une fois le formulaire validé, vous recevrez vos identifiants par courrier ou e-mail. Connectez-vous ensuite à votre espace personnel pour compléter votre profil, déposer votre CV et consulter vos offres d''emploi personnalisées. Pensez à actualiser votre situation chaque mois.",
+    "titre": "Renseigner vos données personnelles",
+    "description": "Complétez le formulaire avec votre état civil : sexe, prénom, nom de naissance, date de naissance, pays et département de naissance, nationalité, numéro de sécurité sociale et situation familiale. Tous les champs sont obligatoires sauf mention contraire.",
     "image": "/images/tutoriels/france-travail/etape_6.jpg"
+  },
+  {
+    "titre": "Préciser votre profil d''inscription",
+    "description": "Sélectionnez le profil qui correspond à votre situation : première inscription, dernière inscription avant ou après le 24/03/2019, ou « Je ne sais plus ». Une fois votre profil choisi, cliquez sur « Démarrer l''inscription ».",
+    "image": "/images/tutoriels/france-travail/etape_7.png"
+  },
+  {
+    "titre": "Suivre les étapes de votre inscription",
+    "description": "Votre inscription se déroule en plusieurs étapes : informations personnelles, codes d''accès, motif d''inscription, demande d''allocations, recherche d''emploi et validation finale. Suivez le fil de progression et complétez chaque section.",
+    "image": "/images/tutoriels/france-travail/etape_8.jpg"
+  },
+  {
+    "titre": "Finaliser et valider votre inscription",
+    "description": "Une fois toutes les étapes complétées, validez votre inscription. Vous recevrez une confirmation et pourrez accéder à votre espace personnel pour suivre votre dossier, actualiser votre situation chaque mois et consulter vos offres d''emploi personnalisées.",
+    "image": "/images/tutoriels/france-travail/etape_9.jpg"
   }
 ]'::jsonb
 WHERE titre LIKE '%France Travail%';
