@@ -1,3 +1,6 @@
+-- ============================================================
+-- SEED — Insertion des 3 tutoriels de base
+-- ============================================================
 
 INSERT INTO tutoriels (titre, categorie, duree, description, infos, lien, etapes) VALUES
 
@@ -24,7 +27,7 @@ INSERT INTO tutoriels (titre, categorie, duree, description, infos, lien, etapes
     },
     {
       "titre": "Cliquer sur « Se connecter »",
-      "description": "Sur la page d''accueil, cliquez sur le bouton « Se connecter » en haut à droite. Une fenêtre apparaît avec deux options. Cliquez sur « Accéder à mon compte ameli » pour créer ou accéder à votre compte.",
+      "description": "Sur la page d''accueil, cliquez sur le bouton « Se connecter » en haut à droite. Une fenêtre apparaît avec deux options. Cliquez sur « Accéder à mon compte ameli ».",
       "image": "/images/tutoriels/ameli/etape_3.png"
     },
     {
@@ -87,33 +90,38 @@ INSERT INTO tutoriels (titre, categorie, duree, description, infos, lien, etapes
   '[
     {
       "titre": "Aller sur francetravail.fr",
-      "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge…) et tapez francetravail.fr dans la barre d''adresse en haut. Dans la liste qui apparaît, cliquez sur le premier résultat : « Accueil | France Travail - francetravail.fr ».",
-      "image": "/images/tutoriels/france-travail/Etape 1 barre de recherche.png"
+      "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge…) et tapez francetravail.fr dans la barre d''adresse. Dans la liste qui apparaît, cliquez sur le premier résultat : « Accueil | France Travail - francetravail.fr ».",
+      "image": "/images/tutoriels/france-travail/etape_1_barre.png"
     },
     {
       "titre": "Cliquer sur « Connexion » puis « Candidat »",
       "description": "Sur la page d''accueil, repérez le bouton « Connexion » en haut à droite. Cliquez dessus : un menu apparaît avec trois choix. Cliquez sur « Candidat ».",
-      "image": "/images/tutoriels/france-travail/Etape 2 page d''accueil.png"
+      "image": "/images/tutoriels/france-travail/etape_2_accueil.png"
     },
     {
       "titre": "Lancer l''inscription",
       "description": "Vous arrivez sur la page « Mon inscription à France Travail ». Elle vous explique que la démarche se déroule en 4 grandes étapes : vos données personnelles, votre demande d''allocations, votre situation, puis votre rendez-vous. Cliquez sur le bouton bleu « Je commence » pour démarrer.",
-      "image": "/images/tutoriels/france-travail/Etape 3 page de connection.png"
+      "image": "/images/tutoriels/france-travail/etape_3_connexion.png"
     },
     {
       "titre": "Vérifier si vous pouvez vous inscrire en ligne",
-      "description": "France Travail vous demande si vous êtes concerné par l''une des situations listées (travail à temps plein, préavis, congé maladie, mineur de moins de 16 ans…). Si aucune ne vous correspond, cochez « Je ne suis concerné par aucune des situations listées ». Cliquez ensuite sur « Valider et continuer ».",
-      "image": "/images/tutoriels/france-travail/etape_3.png"
+      "description": "France Travail vous demande si vous êtes concerné par l''une des situations listées (travail à temps plein, préavis, congé maladie, mineur de moins de 16 ans…). Si aucune ne vous correspond, cochez « Je ne suis concerné par aucune des situations listées ». Cliquez sur « Valider et continuer ».",
+      "image": "/images/tutoriels/france-travail/etape_4_inscription.png"
+    },
+    {
+      "titre": "Préciser si vous vous inscrivez ou vous réinscrivez",
+      "description": "Sélectionnez l''option qui vous correspond : « Je m''inscris pour la première fois ou ma dernière inscription date de plus de 6 ans » ou « J''ai déjà été inscrit et ma dernière inscription date de moins de 6 ans ». Cliquez sur « Valider ».",
+      "image": "/images/tutoriels/france-travail/etape_5_Précision.png"
     },
     {
       "titre": "Remplir votre état civil",
       "description": "Complétez le formulaire « Mon état civil » : sexe, prénom, nom de naissance, date et lieu de naissance, nationalité, numéro de sécurité sociale, situation familiale et nombre d''enfants à charge. Tous les champs sont obligatoires sauf ceux marqués « facultatif ». Cliquez sur « Valider et continuer ».",
-      "image": "/images/tutoriels/france-travail/Etape 4 inscription.jpg"
+      "image": "/images/tutoriels/france-travail/etape_6_formulaire_png.png"
     },
     {
       "titre": "Compléter les autres étapes et finaliser",
       "description": "Poursuivez les étapes dans la barre de gauche : Mon adresse, Mes modalités de contact, Mon motif d''inscription, puis Ma demande d''allocations, Ma situation et votre rendez-vous. Une fois tout validé, vous recevez votre numéro France Travail et l''accès à votre espace personnel. Pensez à actualiser votre situation chaque mois.",
-      "image": "/images/tutoriels/france-travail/etape_6.jpg"
+      "image": "/images/tutoriels/france-travail/etape_7_etapes.png"
     }
   ]'::jsonb
 );
