@@ -2,21 +2,17 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { LayoutDashboard, ArrowLeft, Lock, Loader2, Lightbulb } from 'lucide-react'
 import FeedbacksDashboard from '@/components/admin/FeedbacksDashboard'
 import PropositionsDashboard from '@/components/admin/PropositionsDashboard'
 
 export default function DashboardPage() {
-  const searchParams   = useSearchParams()
-  const tabParam       = searchParams.get('tab')
-
-  const [auth, setAuth]               = useState(false)
-  const [checking, setChecking]       = useState(true)
-  const [onglet, setOnglet]           = useState(tabParam === 'propositions' ? 'propositions' : 'feedbacks')
+  const [auth, setAuth]                         = useState(false)
+  const [checking, setChecking]                 = useState(true)
+  const [onglet, setOnglet]                     = useState('feedbacks')
   const [feedbacksData, setFeedbacksData]       = useState(null)
   const [propositionsData, setPropositionsData] = useState(null)
-  const [dataLoading, setDataLoading] = useState(false)
+  const [dataLoading, setDataLoading]           = useState(false)
 
   useEffect(() => {
     fetch('/api/admin/session')
@@ -36,14 +32,8 @@ export default function DashboardPage() {
         fetch('/api/admin/feedbacks'),
         fetch('/api/admin/propositions'),
       ])
-      if (fbRes.ok) {
-        const fbData = await fbRes.json()
-        setFeedbacksData(fbData.feedbacks || {})
-      }
-      if (propRes.ok) {
-        const propData = await propRes.json()
-        setPropositionsData(propData.propositions || [])
-      }
+      if (fbRes.ok)   setFeedbacksData((await fbRes.json()).feedbacks || {})
+      if (propRes.ok) setPropositionsData((await propRes.json()).propositions || [])
     } catch (err) {
       console.error('Erreur chargement données dashboard :', err)
     } finally {
@@ -90,7 +80,6 @@ export default function DashboardPage() {
           <p className="text-sm text-slate-400 mt-1">Retours utilisateurs et propositions de tutoriels.</p>
         </header>
 
-        {/* Onglets */}
         <nav className="flex gap-2 mb-6">
           <button
             onClick={() => setOnglet('feedbacks')}
@@ -114,7 +103,6 @@ export default function DashboardPage() {
           </button>
         </nav>
 
-        {/* Contenu */}
         <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
           {onglet === 'feedbacks'
             ? <FeedbacksDashboard data={feedbacksData} loading={dataLoading} />
