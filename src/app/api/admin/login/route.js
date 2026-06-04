@@ -6,9 +6,6 @@ export async function POST(request) {
 
   const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
 
-  // LOG TEMPORAIRE pour déboguer
-  console.log("Mot de passe reçu :", password);
-
   if (!adminPasswordHash) {
     return NextResponse.json(
       { error: "ADMIN_PASSWORD_HASH non configuré sur le serveur" },
@@ -16,9 +13,7 @@ export async function POST(request) {
     );
   }
 
-  // Compare the provided password with the hashed password from environment variable
   const match = await bcrypt.compare(password, adminPasswordHash);
-  console.log("Résultat bcrypt.compare :", match);
 
   if (!match) {
     return NextResponse.json(

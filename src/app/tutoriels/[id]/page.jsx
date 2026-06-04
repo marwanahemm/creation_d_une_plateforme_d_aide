@@ -2,57 +2,47 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import {
-  ChevronLeft, ExternalLink, CheckCircle, Circle,
-  Clock, Gauge, ArrowLeft, ArrowRight, Info, ImageOff
-} from 'lucide-react'
+import { ChevronLeft, ExternalLink, Clock, Info, ImageOff, ArrowLeft, ArrowRight } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
 import FeedbackBox from '@/components/FeedbackBox'
 
-const COULEURS = {
+const COULEURS_PAR_CATEGORIE = {
   Santé:     '#0d6efd',
   Famille:   '#6f42c1',
   Emploi:    '#e63946',
-  Fiscalité: '#2a9d8f',
-  Sécurité:  '#f4a261',
 }
 
-const DIFF_STYLE = {
-  'débutant':      'text-green-700 bg-green-50 border border-green-100',
-  'intermédiaire': 'text-orange-700 bg-orange-50 border border-orange-100',
-  'avancé':        'text-red-700 bg-red-50 border border-red-100',
-}
-
-function Capture({ src, alt, couleur }) {
-  const [etat, setEtat] = useState('loading')
+function ImageEtape({ src, alt, couleur }) {
+  const [etat, setEtat] = useState('chargement')
   if (!src) return null
   return (
-    <figure className="mt-6 mb-2 m-0">
-      {etat === 'error' ? (
+    <figure className="mt-4 mb-2">
+      {etat === 'erreur' ? (
         <figcaption
-          className="rounded-2xl border-2 border-dashed flex flex-col items-center justify-center py-16 gap-2"
+          className="rounded-2xl border-2 border-dashed flex flex-col items-center justify-center py-12 gap-2"
           style={{ borderColor: couleur + '40', background: couleur + '08' }}
         >
-          <ImageOff size={28} style={{ color: couleur + '80' }} />
+          <ImageOff size={24} style={{ color: couleur + '80' }} />
           <span className="text-xs" style={{ color: couleur + '99' }}>{alt}</span>
         </figcaption>
       ) : (
-        <a href={src} target="_blank" rel="noreferrer"
+        <a href={src} target="_blank" rel="noreferrer" title="Cliquer pour agrandir"
           className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-md block group cursor-zoom-in"
-          style={{ minHeight: etat === 'loading' ? '220px' : 'auto' }}
-          title="Cliquer pour agrandir">
-          {etat === 'loading' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-2xl block" />}
+          style={{ minHeight: etat === 'chargement' ? '180px' : 'auto' }}
+        >
+          {etat === 'chargement' && <span className="absolute inset-0 bg-slate-100 animate-pulse rounded-2xl block" />}
           <img
-            src={src}
-            alt={alt}
+            src={src} alt={alt}
             onLoad={() => setEtat('ok')}
-            onError={() => setEtat('error')}
+            onError={() => setEtat('erreur')}
             className="w-full h-auto block rounded-2xl transition-transform duration-200 group-hover:scale-[1.01]"
             style={{ opacity: etat === 'ok' ? 1 : 0, transition: 'opacity .3s' }}
           />
           {etat === 'ok' && (
-            <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white flex items-center justify-between"
-              style={{ background: 'linear-gradient(transparent,rgba(0,0,0,.6))' }}>
+            <figcaption
+              className="absolute bottom-0 left-0 right-0 px-4 py-2 text-xs text-white flex items-center justify-between"
+              style={{ background: 'linear-gradient(transparent, rgba(0,0,0,.6))' }}
+            >
               <span>{alt}</span>
               <span className="opacity-70 text-[10px]">🔍 Cliquer pour agrandir</span>
             </figcaption>
@@ -63,86 +53,71 @@ function Capture({ src, alt, couleur }) {
   )
 }
 
-export default function TutorielDetail({ params }) {
-  const [id, setId] = useState(null)
-  const [tutoriel, setTutoriel]       = useState(null)
-  const [chargement, setChargement]   = useState(true)
-  const [etapeActive, setEtapeActive] = useState(0)
-  const [cochees, setCochees]         = useState(new Set())
+export default function TutorielDetailPage({ params }) {
+  const [tutorielId, setTutorielId]             = useState(null)
+  const [tutoriel, setTutoriel]                 = useState(null)
+  const [chargement, setChargement]             = useState(true)
+  const [indexEtapeActive, setIndexEtapeActive] = useState(0)
 
   useEffect(() => {
-    params.then ? params.then(p => setId(p.id)) : setId(params.id)
+    params.then ? params.then(p => setTutorielId(p.id)) : setTutorielId(params.id)
   }, [params])
 
   useEffect(() => {
-    if (!id) return
+    if (!tutorielId) return
     supabase
       .from('tutoriels')
       .select('*')
-      .eq('id', Number(id))
+      .eq('id', Number(tutorielId))
       .single()
-      .then(({ data }) => { setTutoriel(data ?? null); setChargement(false) })
-  }, [id])
-
-  function toggleEtape(i) {
-    setCochees(prev => {
-      const next = new Set(prev)
-      next.has(i) ? next.delete(i) : next.add(i)
-      return next
-    })
-  }
+      .then(({ data }) => {
+        setTutoriel(data ?? null)
+        setChargement(false)
+      })
+  }, [tutorielId])
 
   if (chargement) return (
-    <main className="max-w-4xl mx-auto px-4 py-10 animate-pulse">
+    <main className="max-w-3xl mx-auto px-4 py-10 animate-pulse">
       <span className="block h-4 bg-slate-200 rounded w-24 mb-8" />
-      <article className="bg-white rounded-2xl border border-slate-200 p-6 mb-6">
+      <section className="bg-white rounded-2xl border border-slate-200 p-6">
         <span className="block h-6 bg-slate-200 rounded w-2/3 mb-3" />
         <span className="block h-4 bg-slate-100 rounded w-full" />
-      </article>
+      </section>
     </main>
   )
 
   if (!tutoriel) return (
     <main className="text-center py-20 text-slate-400">
-      <p className="font-medium">Tutoriel non trouvé</p>
+      <p className="font-medium">Tutoriel non trouvé.</p>
       <Link href="/tutoriels" className="mt-2 text-sm text-[#000091] hover:underline block">← Retour aux guides</Link>
     </main>
   )
 
-  const { titre, categorie, difficulte, duree, lien, infos, etapes } = tutoriel
-  const couleur    = COULEURS[categorie] ?? '#000091'
-  const badgeStyle = DIFF_STYLE[difficulte] ?? 'text-slate-700 bg-slate-100'
-  const termine    = etapes?.length > 0 && cochees.size === etapes.length
+  const { titre, categorie, duree, lien, infos, etapes } = tutoriel
+  const couleur = COULEURS_PAR_CATEGORIE[categorie] ?? '#000091'
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', sans-serif" }}>
+    <main className="min-h-screen bg-[#f8f9fc]">
 
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
-        <section className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-black text-[#000091] text-lg">
+        <section className="max-w-3xl mx-auto px-4 py-3">
+          <Link href="/tutoriels" className="flex items-center gap-2 font-black text-[#000091] text-lg w-fit">
             <span className="w-1 h-6 rounded-sm" style={{ background: 'linear-gradient(180deg,#000091 50%,#e1000f 50%)' }} />
-            Démarches Admin
+            Les guides
           </Link>
-          <Link href="/" className="text-sm font-bold text-[#000091] hover:underline">Accueil</Link>
         </section>
       </nav>
 
-      <article className="max-w-4xl mx-auto px-4 py-8">
+      <article className="max-w-3xl mx-auto px-4 py-8">
 
         <Link href="/tutoriels" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors">
           <ChevronLeft size={15} /> Retour aux guides
         </Link>
 
-        {/* En-tête */}
         <header className="bg-white border border-slate-200 rounded-2xl p-6 mb-6 shadow-sm">
           <span className="block w-full h-1.5 rounded-full mb-5" style={{ backgroundColor: couleur }} />
           <p className="flex items-center gap-3 flex-wrap mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">{categorie}</span>
-            {difficulte && (
-              <span className={`flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${badgeStyle}`}>
-                <Gauge size={11} /> {difficulte}
-              </span>
-            )}
             {duree && (
               <span className="flex items-center gap-1 text-xs text-slate-400">
                 <Clock size={12} /> {duree}
@@ -152,15 +127,14 @@ export default function TutorielDetail({ params }) {
           <h1 className="text-2xl font-black text-slate-900">{titre}</h1>
         </header>
 
-        {/* Infos utiles */}
         {infos?.length > 0 && (
           <aside className="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-6">
             <h2 className="flex items-center gap-2 text-sm font-bold text-blue-800 mb-3">
               <Info size={15} /> À savoir avant de commencer
             </h2>
             <ul className="space-y-1.5 list-none p-0">
-              {infos.map((info, i) => (
-                <li key={i} className="flex gap-2 text-sm text-blue-700">
+              {infos.map((info, index) => (
+                <li key={index} className="flex gap-2 text-sm text-blue-700">
                   <span className="mt-0.5 shrink-0">•</span>
                   <span>{info}</span>
                 </li>
@@ -169,113 +143,62 @@ export default function TutorielDetail({ params }) {
           </aside>
         )}
 
-        {/* Sidebar + contenu */}
         {etapes?.length > 0 && (
-          <section className="grid md:grid-cols-[240px_1fr] gap-5">
+          <article className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <header className="flex items-center justify-between gap-3 mb-4">
+              <span className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style={{ backgroundColor: couleur }}>
+                  {indexEtapeActive + 1}
+                </span>
+                <h2 className="font-bold text-slate-800">{etapes[indexEtapeActive].titre}</h2>
+              </span>
+              <span className="text-xs font-semibold text-slate-400 shrink-0">
+                Étape {indexEtapeActive + 1} / {etapes.length}
+              </span>
+            </header>
 
-            <aside>
-              <nav className="bg-white border border-slate-200 rounded-2xl p-4 sticky top-20">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-3">Étapes</p>
-                <ul className="space-y-1 list-none p-0">
-                  {etapes.map((e, i) => (
-                    <li key={i}>
-                      <button
-                        onClick={() => setEtapeActive(i)}
-                        className={`w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-colors ${
-                          etapeActive === i ? 'text-white font-semibold' : 'text-slate-600 hover:bg-slate-50'
-                        }`}
-                        style={etapeActive === i ? { background: couleur } : {}}
-                      >
-                        {cochees.has(i)
-                          ? <CheckCircle size={14} className="shrink-0" style={{ color: etapeActive === i ? 'white' : '#22c55e' }} />
-                          : <Circle size={14} className="shrink-0" style={{ color: etapeActive === i ? 'rgba(255,255,255,.6)' : '#cbd5e1' }} />
-                        }
-                        <span className="line-clamp-2 leading-snug">{e.titre}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </aside>
+            <p className="text-slate-600 text-sm leading-relaxed">{etapes[indexEtapeActive].description}</p>
 
-            <section>
-              <article className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                <header className="flex items-center gap-3 mb-4">
-                  <span className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0" style={{ backgroundColor: couleur }}>
-                    {etapeActive + 1}
-                  </span>
-                  <h2 className="font-bold text-slate-800 text-base">{etapes[etapeActive].titre}</h2>
-                </header>
+            <ImageEtape
+              src={etapes[indexEtapeActive].image}
+              alt={`Étape ${indexEtapeActive + 1} — ${etapes[indexEtapeActive].titre}`}
+              couleur={couleur}
+            />
 
-                <p className="text-slate-600 leading-relaxed text-sm mb-2">{etapes[etapeActive].description}</p>
-
-                <Capture
-                  src={etapes[etapeActive].image}
-                  alt={`Capture étape ${etapeActive + 1} — ${etapes[etapeActive].titre}`}
-                  couleur={couleur}
-                />
-
-                <footer className="mt-6 flex items-center justify-between pt-5 border-t border-slate-100 flex-wrap gap-3">
-                  <button
-                    onClick={() => toggleEtape(etapeActive)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
-                      cochees.has(etapeActive)
-                        ? 'bg-green-50 border-green-200 text-green-700'
-                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                    }`}
-                  >
-                    <CheckCircle size={14} />
-                    {cochees.has(etapeActive) ? 'Fait ✓' : 'Marquer comme fait'}
-                  </button>
-                  <p className="flex gap-4 m-0">
-                    <button
-                      onClick={() => setEtapeActive(p => Math.max(0, p - 1))}
-                      disabled={etapeActive === 0}
-                      className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                    >
-                      <ArrowLeft size={14} /> Précédent
-                    </button>
-                    <button
-                      onClick={() => setEtapeActive(p => Math.min(etapes.length - 1, p + 1))}
-                      disabled={etapeActive === etapes.length - 1}
-                      className="flex items-center gap-1 text-sm font-semibold hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                      style={{ color: couleur }}
-                    >
-                      Suivant <ArrowRight size={14} />
-                    </button>
-                  </p>
-                </footer>
-              </article>
-
-              {termine && (
-                <aside className="mt-4 bg-green-50 border border-green-200 rounded-2xl p-5 text-center">
-                  <CheckCircle size={28} className="text-green-600 mx-auto mb-2" />
-                  <p className="font-bold text-green-800 mb-3">Bravo, vous avez terminé ce guide !</p>
-                  {lien && (
-                    <a href={lien} target="_blank" rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition-all"
-                      style={{ backgroundColor: couleur }}>
-                      Accéder au site officiel <ExternalLink size={13} />
-                    </a>
-                  )}
-                </aside>
-              )}
-
-              {!termine && lien && (
-                <p className="mt-4 flex justify-end">
-                  <a href={lien} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
-                    style={{ backgroundColor: couleur }}>
-                    Accéder au site officiel <ExternalLink size={14} />
-                  </a>
-                </p>
-              )}
-
-              {/* 👇 Ajoute cette ligne ici */}
-              <FeedbackBox tutorielId={tutoriel.id} couleur={couleur} />
-            </section>
-          </section>
+            <nav className="mt-6 flex items-center justify-between pt-5 border-t border-slate-100 gap-3">
+              <button
+                onClick={() => setIndexEtapeActive(i => Math.max(0, i - 1))}
+                disabled={indexEtapeActive === 0}
+                className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 bg-slate-50 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                <ArrowLeft size={14} /> Précédent
+              </button>
+              <button
+                onClick={() => setIndexEtapeActive(i => Math.min(etapes.length - 1, i + 1))}
+                disabled={indexEtapeActive === etapes.length - 1}
+                className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold text-white hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+                style={{ backgroundColor: couleur }}
+              >
+                Suivant <ArrowRight size={14} />
+              </button>
+            </nav>
+          </article>
         )}
+
+        {lien && (
+          <nav className="mt-6 flex justify-center">
+            <a
+              href={lien} target="_blank" rel="noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white hover:opacity-90"
+              style={{ backgroundColor: couleur }}
+            >
+              Accéder au site officiel <ExternalLink size={14} />
+            </a>
+          </nav>
+        )}
+
+        <FeedbackBox tutorielId={tutoriel.id} couleur={couleur} />
+
       </article>
     </main>
   )
