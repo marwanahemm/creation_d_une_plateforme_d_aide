@@ -116,7 +116,7 @@ INSERT INTO tutoriels (titre, categorie, duree, description, infos, lien, etapes
     {
       "titre": "Remplir votre état civil",
       "description": "Complétez le formulaire « Mon état civil » : sexe, prénom, nom de naissance, date et lieu de naissance, nationalité, numéro de sécurité sociale, situation familiale et nombre d''enfants à charge. Tous les champs sont obligatoires sauf ceux marqués « facultatif ». Cliquez sur « Valider et continuer ».",
-      "image": "/images/tutoriels/france-travail/etape_6_formulaire_png.png"
+      "image": "/images/tutoriels/france-travail/etape_6_formulaire.png"
     },
     {
       "titre": "Compléter les autres étapes et finaliser",
