@@ -84,15 +84,13 @@ a { text-decoration: none; color: inherit; }
   justify-content: space-between;
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  font-family: 'Source Sans 3', 'Trebuchet MS', Arial, sans-serif;
-  font-weight: 900; font-size: 1.35rem; color: #fff;
-  letter-spacing: -.02em;
+  display: flex; align-items: center;
 }
-.nav-logo-bar {
-  width: 4px; height: 28px;
-  background: linear-gradient(180deg, #fff 50%, var(--rouge-marianne) 50%);
-  border-radius: 2px;
+.nav-logo-img {
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
 .nav-links { display: flex; align-items: center; gap: 28px; position: absolute; left: 50%; transform: translateX(-50%); }
 .nav-link {
@@ -186,10 +184,10 @@ a { text-decoration: none; color: inherit; }
   .nav-inner > .nav-cta-btn { display: none; }
   .nav-burger { display: flex; }
   .nav-logo {
-    font-size: .88rem;
-    min-width: 0;
     flex: 1;
-    line-height: 1.25;
+  }
+  .nav-logo-img {
+    height: 44px;
   }
   .nav-inner { padding: 0 16px; gap: 12px; min-height: var(--nav-h); height: auto; }
   .nav { height: auto; min-height: var(--nav-h); }
