@@ -8,4 +8,4 @@ Disallow: /admin/*
 Disallow: /api/
 Disallow: /api/*
 
-Sitemap: https://plateformedaideadministrative.vercel.app/landing.html
+Sitemap: https://plateformedaideadministrative.vercel.app/sitemap.xml
