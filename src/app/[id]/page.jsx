@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   ChevronLeft, ExternalLink, CheckCircle, Circle,
-  Clock, Gauge, ArrowLeft, ArrowRight, Info, ImageOff
+  Clock, ArrowLeft, ArrowRight, Info, ImageOff
 } from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
 
@@ -16,11 +16,6 @@ const COULEURS = {
   Sécurité:  '#f4a261',
 }
 
-const DIFF_STYLE = {
-  'débutant':      'text-green-700 bg-green-50 border border-green-100',
-  'intermédiaire': 'text-orange-700 bg-orange-50 border border-orange-100',
-  'avancé':        'text-red-700 bg-red-50 border border-red-100',
-}
 
 function Capture({ src, alt, couleur }) {
   const [etat, setEtat] = useState('loading')
@@ -104,9 +99,8 @@ export default function TutorielDetail({ params }) {
     </main>
   )
 
-  const { titre, categorie, difficulte, duree, lien, infos, etapes } = tutoriel
+  const { titre, categorie, duree, lien, infos, etapes } = tutoriel
   const couleur    = COULEURS[categorie] ?? '#000091'
-  const badgeStyle = DIFF_STYLE[difficulte] ?? 'text-slate-700 bg-slate-100'
   const termine    = etapes?.length > 0 && cochees.size === etapes.length
 
   return (
@@ -133,11 +127,6 @@ export default function TutorielDetail({ params }) {
           <span className="block w-full h-1.5 rounded-full mb-5" style={{ backgroundColor: couleur }} />
           <p className="flex items-center gap-3 flex-wrap mb-3">
             <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">{categorie}</span>
-            {difficulte && (
-              <span className={`flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${badgeStyle}`}>
-                <Gauge size={11} /> {difficulte}
-              </span>
-            )}
             {duree && (
               <span className="flex items-center gap-1 text-xs text-slate-400">
                 <Clock size={12} /> {duree}

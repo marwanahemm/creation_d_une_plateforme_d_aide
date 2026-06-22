@@ -5,12 +5,10 @@ import { Search, X, SlidersHorizontal } from "lucide-react";
 
 
 // =============================================
-//  Catégories et difficultés
+//  Catégories
 // =============================================
 
 const CATEGORIES = ["Santé", "Famille", "Emploi", "Fiscalité", "Sécurité"];
-
-const DIFFICULTES = ["débutant", "intermédiaire", "avancé"];
 
 
 // =============================================
@@ -23,7 +21,6 @@ export default function SearchBar({ onResults, onReset }) {
 
   const [query, setQuery]           = useState("");
   const [categorie, setCategorie]   = useState("");
-  const [difficulte, setDifficulte] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [loading, setLoading]       = useState(false);
 
@@ -40,7 +37,6 @@ export default function SearchBar({ onResults, onReset }) {
 
     if (query)      params.set("q", query);
     if (categorie)  params.set("categorie", categorie);
-    if (difficulte) params.set("difficulte", difficulte);
 
     try {
       const res = await fetch(`/api/tutoriels?${params.toString()}`);
@@ -62,7 +58,6 @@ export default function SearchBar({ onResults, onReset }) {
   const handleReset = () => {
     setQuery("");
     setCategorie("");
-    setDifficulte("");
     setShowFilters(false);
     onReset();
   };
@@ -70,7 +65,7 @@ export default function SearchBar({ onResults, onReset }) {
 
   // --- Un filtre est-il actif ? ---
 
-  const hasFilters = query || categorie || difficulte;
+  const hasFilters = query || categorie;
 
 
   // =============================================
@@ -149,24 +144,6 @@ export default function SearchBar({ onResults, onReset }) {
           </fieldset>
 
 
-          <fieldset className="flex-1 min-w-50">
-            <legend className="text-xs font-bold text-[#3a3a3a] mb-2">
-              Difficulté
-            </legend>
-
-            <select
-              value={difficulte}
-              onChange={(e) => setDifficulte(e.target.value)}
-              className="w-full p-2.5 border-2 border-[#dddddd] rounded-lg text-sm focus:border-[#000091] focus:outline-none"
-            >
-              <option value="">Toutes les difficultés</option>
-              {DIFFICULTES.map((diff) => (
-                <option key={diff} value={diff}>
-                  {diff.charAt(0).toUpperCase() + diff.slice(1)}
-                </option>
-              ))}
-            </select>
-          </fieldset>
         </aside>
       )}
 
