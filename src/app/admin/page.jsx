@@ -7,10 +7,11 @@ import {
   Trash2, Plus, LogOut, Lock, Eye, EyeOff,
   FileText, Pencil, X, ThumbsUp, ThumbsDown, LayoutDashboard, Lightbulb,
 } from "lucide-react"
+import EditeurEtapes from "@/components/admin/EditeurEtapes"
 
 const FORMULAIRE_VIDE = {
   titre: "", categorie: "",
-  duree: "", description: "", lien: "", infos: "", etapes: "",
+  duree: "", description: "", lien: "", infos: "", etapes: [],
 }
 
 const classeInput = "w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm text-[#161616] placeholder:text-[#aaa] outline-none focus:border-[#000091] transition-colors bg-white"
@@ -106,7 +107,13 @@ export default function AdminPage() {
       description: tutoriel.description || "",
       lien:        tutoriel.lien        || "",
       infos:    Array.isArray(tutoriel.infos)   ? tutoriel.infos.join("\n") : "",
-      etapes:   Array.isArray(tutoriel.etapes)  ? tutoriel.etapes.map(e => `${e.titre} | ${e.description}`).join("\n") : "",
+      etapes:   Array.isArray(tutoriel.etapes)
+        ? tutoriel.etapes.map(e => ({
+            titre:       e.titre       || "",
+            description: e.description || "",
+            image:       e.image       || "",
+          }))
+        : [],
     })
   }
 
@@ -119,12 +126,13 @@ export default function AdminPage() {
   async function soumettreFormulaire(e) {
     e.preventDefault()
     const infosTableau  = formulaire.infos.trim() ? formulaire.infos.split("\n").filter(l => l.trim()) : []
-    const etapesTableau = formulaire.etapes.trim()
-      ? formulaire.etapes.split("\n").filter(l => l.trim()).map(ligne => {
-          const parties = ligne.split("|")
-          return { titre: (parties[0] || "").trim(), description: (parties[1] || "").trim() }
-        })
-      : []
+    const etapesTableau = (formulaire.etapes || [])
+      .filter(e => (e.titre || "").trim() || (e.description || "").trim() || e.image)
+      .map(e => ({
+        titre:       (e.titre || "").trim(),
+        description: (e.description || "").trim(),
+        image:       e.image || "",
+      }))
 
     const donnees = {
       titre:       formulaire.titre,
@@ -296,12 +304,13 @@ export default function AdminPage() {
                 rows={4} className={`${classeInput} resize-y`} />
             </label>
 
-            <label className="block mb-5">
-              <span className="block text-xs font-semibold text-[#161616] mb-1">Étapes (format : Titre | Description, une par ligne)</span>
-              <textarea value={formulaire.etapes} onChange={e => setFormulaire({...formulaire, etapes: e.target.value})}
-                placeholder={"Aller sur ameli.fr | Ouvrez votre navigateur et tapez ameli.fr\nCréer mon compte | Cliquez sur Mon compte en haut à droite"}
-                rows={5} className={`${classeInput} resize-y`} />
-            </label>
+            <div className="block mb-5">
+              <span className="block text-xs font-semibold text-[#161616] mb-2">Étapes</span>
+              <EditeurEtapes
+                etapes={formulaire.etapes}
+                onChange={nouvelles => setFormulaire({ ...formulaire, etapes: nouvelles })}
+              />
+            </div>
 
             <nav className="flex gap-3">
               <button type="submit" className={`px-6 py-2.5 text-white rounded-lg text-sm font-bold cursor-pointer ${idEnEdition ? "bg-[#18753c] hover:bg-[#145e30]" : "bg-[#000091] hover:bg-[#1212ff]"}`}>
