@@ -1,93 +1,127 @@
-UPDATE tutoriels
-SET etapes = '[
-  {
-    "titre": "Accéder à Mon Compte sur caf.fr",
-    "description": "Rendez-vous sur caf.fr. Cliquez sur le picto « Mon Compte » dans la barre bleue en haut de la page, puis sur « Créer mon compte ». Bon à savoir : la création dure 5 à 10 minutes et comprend 3 étapes. Cliquez sur « Commencer » pour lancer la démarche.",
-    "image": "/images/tutoriels/caf/etape_1.png"
-  },
-  {
-    "titre": "Renseigner votre état civil",
-    "description": "Complétez votre état civil : numéro de sécurité sociale, civilité, nom de naissance, prénoms, date et lieu de naissance. Ensuite, renseignez le numéro de votre pièce d''identité (carte d''identité, titre de séjour ou passeport). Sans pièce d''identité française, cliquez sur le lien prévu à cet effet.",
-    "image": "/images/tutoriels/caf/etape_2.png"
-  },
-  {
-    "titre": "Vérifier vos coordonnées de contact",
-    "description": "Choisissez de recevoir un code de vérification par SMS ou par e-mail. Saisissez votre numéro de téléphone ou adresse mail, confirmez-le, puis cliquez sur « Envoyer le code ». Entrez le code reçu et cliquez sur « Valider ».",
-    "image": "/images/tutoriels/caf/etape_3.png"
-  },
-  {
-    "titre": "Choisir un mot de passe et finaliser",
-    "description": "Créez un mot de passe entre 10 et 64 caractères, avec au moins 1 chiffre, 1 majuscule et 1 minuscule. Confirmez-le puis cliquez sur « Continuer ». Vérifiez le récapitulatif de vos informations et cliquez sur « Se connecter » pour accéder à votre espace.",
-    "image": "/images/tutoriels/caf/etape_4.png"
-  }
-]'::jsonb
-WHERE titre LIKE '%CAF%';
+-- ============================================================
+-- SEED — Insertion des 3 tutoriels de base
+-- ============================================================
 
+INSERT INTO tutoriels (titre, categorie, duree, description, infos, lien, etapes) VALUES
 
-UPDATE tutoriels
-SET etapes = '[
-  {
-    "titre": "Aller sur ameli.fr",
-    "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge...) et tapez ameli.fr dans la barre d''adresse. Si demandé, renseignez votre code postal pour accéder aux informations de votre caisse.",
-    "image": "/images/tutoriels/ameli/etape_1.png"
-  },
-  {
-    "titre": "Cliquer sur « Compte ameli »",
-    "description": "Sur la page d''accueil, cliquez sur l''icône « Compte ameli » en haut à droite. Une nouvelle page s''ouvre. Cliquez sur « Créer mon compte » pour commencer.",
-    "image": "/images/tutoriels/ameli/etape_2.png"
-  },
-  {
-    "titre": "Renseigner vos informations personnelles",
-    "description": "Saisissez votre nom de famille, votre numéro de sécurité sociale (13 chiffres, sans la clé), votre date de naissance et votre code postal. Cliquez sur « Continuer ».",
-    "image": "/images/tutoriels/ameli/etape_3.png"
-  },
-  {
-    "titre": "Confirmer votre identité",
-    "description": "Renseignez les 7 derniers chiffres de votre IBAN (présent sur votre RIB). Cette étape permet de vérifier votre identité de manière sécurisée.",
-    "image": "/images/tutoriels/ameli/etape_4.png"
-  },
-  {
-    "titre": "Créer votre mot de passe",
-    "description": "Choisissez un mot de passe sécurisé comportant au moins 8 caractères avec majuscule, minuscule et chiffre ou caractère spécial. Validez votre compte via le lien reçu par e-mail.",
-    "image": "/images/tutoriels/ameli/etape_5.png"
-  }
-]'::jsonb
-WHERE titre LIKE '%Ameli%';
+-- ============================================================
+-- 1. AMELI
+-- ============================================================
+(
+  'Créer un compte Ameli',
+  'Santé',
+  '10 min',
+  'Créez votre compte Ameli pour suivre vos remboursements de santé, télécharger vos attestations et contacter votre caisse en ligne.',
+  '["Votre numéro de sécurité sociale (13 chiffres)", "Votre RIB", "Une adresse e-mail valide", "Votre code postal"]'::jsonb,
+  'https://www.ameli.fr',
+  '[
+    {
+      "titre": "Aller sur ameli.fr",
+      "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge…) et tapez ameli.fr dans la barre d''adresse en haut. Dans la liste qui apparaît, cliquez sur le premier résultat : « ameli, le site de l''Assurance Maladie en ligne | ameli.fr ».",
+      "image": "/images/tutoriels/ameli/etape_1.png"
+    },
+    {
+      "titre": "Renseigner votre code postal",
+      "description": "Une fenêtre s''ouvre et vous demande votre code postal. Saisissez-le (format : 5 chiffres) puis cliquez sur « Valider ». Cela permet d''afficher les informations de votre caisse locale.",
+      "image": "/images/tutoriels/ameli/etape_2.png"
+    },
+    {
+      "titre": "Cliquer sur « Se connecter »",
+      "description": "Sur la page d''accueil, cliquez sur le bouton « Se connecter » en haut à droite. Une fenêtre apparaît avec deux options. Cliquez sur « Accéder à mon compte ameli ».",
+      "image": "/images/tutoriels/ameli/etape_3.png"
+    },
+    {
+      "titre": "Cliquer sur « Créez votre compte »",
+      "description": "Vous arrivez sur la page du compte ameli. Sur la droite, sous « Vous n''avez pas de compte ameli », cliquez sur le bouton « Créez votre compte ».",
+      "image": "/images/tutoriels/ameli/etape_4.png"
+    },
+    {
+      "titre": "Remplir le formulaire d''inscription",
+      "description": "Saisissez les informations demandées : votre nom de famille (sans prénom), votre numéro de sécurité sociale (13 chiffres), votre date de naissance (jj/mm/aaaa) et votre code postal. Tous les champs sont obligatoires. Cliquez sur « Continuer ».",
+      "image": "/images/tutoriels/ameli/etape_5.png"
+    }
+  ]'::jsonb
+),
 
+-- ============================================================
+-- 2. CAF
+-- ============================================================
+(
+  'Créer un compte CAF',
+  'Famille',
+  '10 min',
+  'Créez votre compte sur caf.fr pour gérer vos allocations familiales, déclarer vos ressources et accéder à toutes vos prestations en ligne.',
+  '["Votre numéro de sécurité sociale", "Une pièce d''identité valide (CNI, titre de séjour ou passeport)", "Un téléphone portable ou une adresse e-mail"]'::jsonb,
+  'https://www.caf.fr',
+  '[
+    {
+      "titre": "Accéder à Mon Compte sur caf.fr",
+      "description": "Rendez-vous sur caf.fr. Cliquez sur le picto « Mon Compte » dans la barre bleue en haut de la page, puis sur « Créer mon compte ». La création dure 5 à 10 minutes et comprend 3 étapes. Cliquez sur « Commencer » pour lancer la démarche.",
+      "image": "/images/tutoriels/caf/etape_1.png"
+    },
+    {
+      "titre": "Renseigner votre état civil",
+      "description": "Complétez votre état civil : numéro de sécurité sociale, civilité, nom de naissance, prénoms, date et lieu de naissance. Ensuite, renseignez le numéro de votre pièce d''identité (carte d''identité, titre de séjour ou passeport).",
+      "image": "/images/tutoriels/caf/etape_2.png"
+    },
+    {
+      "titre": "Vérifier vos coordonnées de contact",
+      "description": "Choisissez de recevoir un code de vérification par SMS ou par e-mail. Saisissez votre numéro de téléphone ou adresse mail, confirmez-le, puis cliquez sur « Envoyer le code ». Entrez le code reçu et cliquez sur « Valider ».",
+      "image": "/images/tutoriels/caf/etape_3.png"
+    },
+    {
+      "titre": "Choisir un mot de passe et finaliser",
+      "description": "Créez un mot de passe entre 10 et 64 caractères, avec au moins 1 chiffre, 1 majuscule et 1 minuscule. Confirmez-le puis cliquez sur « Continuer ». Vérifiez le récapitulatif et cliquez sur « Se connecter » pour accéder à votre espace.",
+      "image": "/images/tutoriels/caf/etape_4.png"
+    }
+  ]'::jsonb
+),
 
-UPDATE tutoriels
-SET etapes = '[
-  {
-    "titre": "Accéder à la page de connexion",
-    "description": "Ouvrez votre navigateur et rendez-vous sur francetravail.fr. Sur la page de connexion, repérez la mention « Première connexion ? » et cliquez sur « Créer mon compte » juste à côté.",
-    "image": "/images/tutoriels/france-travail/etape_1.jpg"
-  },
-  {
-    "titre": "Préparer vos documents",
-    "description": "Avant de commencer, rassemblez : une pièce d''identité, votre carte Vitale, un justificatif de domicile, votre attestation employeur, vos derniers bulletins de salaire, un RIB et votre CV. Ayez également votre adresse e-mail à portée de main. Une fois prêt, cliquez sur « Valider et continuer ».",
-    "image": "/images/tutoriels/france-travail/etape_2.jpg"
-  },
-  {
-    "titre": "Vérifier votre situation",
-    "description": "France Travail vous demande de préciser votre situation actuelle (salarié, indépendant, sans emploi…). Selon votre réponse, vous serez orienté vers le parcours d''inscription adapté ou informé que vous n''êtes pas éligible.",
-    "image": "/images/tutoriels/france-travail/etape_3.jpg"
-  },
-  {
-    "titre": "Choisir le motif d''inscription",
-    "description": "Sélectionnez parmi les 4 motifs proposés celui qui correspond à votre situation (fin de CDD, licenciement, démission, etc.) puis cliquez sur « Démarrer l''inscription ».",
-    "image": "/images/tutoriels/france-travail/etape_4.jpg"
-  },
-  {
-    "titre": "Remplir votre profil",
-    "description": "Complétez l''ensemble des champs : genre, prénom, nom, date et lieu de naissance, nationalité, adresse postale, situation familiale, numéro de sécurité sociale, régime, téléphone et adresse e-mail. Toutes ces informations sont nécessaires pour finaliser votre dossier.",
-    "image": "/images/tutoriels/france-travail/etape_5.jpg"
-  },
-  {
-    "titre": "Finaliser l''inscription et recevoir vos accès",
-    "description": "Une fois le formulaire validé, vous recevrez vos identifiants par courrier ou e-mail. Connectez-vous ensuite à votre espace personnel pour compléter votre profil, déposer votre CV et consulter vos offres d''emploi personnalisées. Pensez à actualiser votre situation chaque mois.",
-    "image": "/images/tutoriels/france-travail/etape_6.jpg"
-  }
-]'::jsonb
-WHERE titre LIKE '%France Travail%';
-
-
+-- ============================================================
+-- 3. FRANCE TRAVAIL
+-- ============================================================
+(
+  'S''inscrire à France Travail',
+  'Emploi',
+  '20 min',
+  'Inscrivez-vous comme demandeur d''emploi sur France Travail pour bénéficier d''un accompagnement, percevoir vos allocations et accéder aux offres d''emploi.',
+  '["Une pièce d''identité", "Votre carte Vitale", "Un justificatif de domicile", "Vos derniers bulletins de salaire et attestation employeur", "Un RIB et votre CV", "Une adresse e-mail valide"]'::jsonb,
+  'https://www.francetravail.fr',
+  '[
+    {
+      "titre": "Aller sur francetravail.fr",
+      "description": "Ouvrez votre navigateur (Chrome, Firefox, Edge…) et tapez francetravail.fr dans la barre d''adresse. Dans la liste qui apparaît, cliquez sur le premier résultat : « Accueil | France Travail - francetravail.fr ».",
+      "image": "/images/tutoriels/france-travail/etape_1_barre.png"
+    },
+    {
+      "titre": "Cliquer sur « Connexion » puis « Candidat »",
+      "description": "Sur la page d''accueil, repérez le bouton « Connexion » en haut à droite. Cliquez dessus : un menu apparaît avec trois choix. Cliquez sur « Candidat ».",
+      "image": "/images/tutoriels/france-travail/etape_2_accueil.png"
+    },
+    {
+      "titre": "Lancer l''inscription",
+      "description": "Vous arrivez sur la page « Mon inscription à France Travail ». Elle vous explique que la démarche se déroule en 4 grandes étapes : vos données personnelles, votre demande d''allocations, votre situation, puis votre rendez-vous. Cliquez sur le bouton bleu « Je commence » pour démarrer.",
+      "image": "/images/tutoriels/france-travail/etape_3_connexion.png"
+    },
+    {
+      "titre": "Vérifier si vous pouvez vous inscrire en ligne",
+      "description": "France Travail vous demande si vous êtes concerné par l''une des situations listées (travail à temps plein, préavis, congé maladie, mineur de moins de 16 ans…). Si aucune ne vous correspond, cochez « Je ne suis concerné par aucune des situations listées ». Cliquez sur « Valider et continuer ».",
+      "image": "/images/tutoriels/france-travail/etape_4_inscription.png"
+    },
+    {
+      "titre": "Préciser si vous vous inscrivez ou vous réinscrivez",
+      "description": "Sélectionnez l''option qui vous correspond : « Je m''inscris pour la première fois ou ma dernière inscription date de plus de 6 ans » ou « J''ai déjà été inscrit et ma dernière inscription date de moins de 6 ans ». Cliquez sur « Valider ».",
+      "image": "/images/tutoriels/france-travail/etape_5_Précision.png"
+    },
+    {
+      "titre": "Remplir votre état civil",
+      "description": "Complétez le formulaire « Mon état civil » : sexe, prénom, nom de naissance, date et lieu de naissance, nationalité, numéro de sécurité sociale, situation familiale et nombre d''enfants à charge. Tous les champs sont obligatoires sauf ceux marqués « facultatif ». Cliquez sur « Valider et continuer ».",
+      "image": "/images/tutoriels/france-travail/etape_6_formulaire.png"
+    },
+    {
+      "titre": "Compléter les autres étapes et finaliser",
+      "description": "Poursuivez les étapes dans la barre de gauche : Mon adresse, Mes modalités de contact, Mon motif d''inscription, puis Ma demande d''allocations, Ma situation et votre rendez-vous. Une fois tout validé, vous recevez votre numéro France Travail et l''accès à votre espace personnel. Pensez à actualiser votre situation chaque mois.",
+      "image": "/images/tutoriels/france-travail/etape_7_etapes.png"
+    }
+  ]'::jsonb
+);
