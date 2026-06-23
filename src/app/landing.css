@@ -16,7 +16,8 @@
   --gris:        #5b5b6b;
   --gris-clair:  #8a8a9a;
   --bordure:     #e8e8f0;
-  --fond:        #f6f7fc;
+  --fond:        #eef1fb;
+  --fond-doux:   #f5f3ff;
   --blanc:       #ffffff;
   --radius:      18px;
   --radius-sm:   12px;
@@ -105,8 +106,11 @@
 /* ════════ HERO ════════ */
 .landing .hero {
   position: relative;
-  padding: 80px 0 72px;
+  padding: 72px 0 64px;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(45,45,255,0.10), transparent 60%),
+    linear-gradient(180deg, #eaf0ff 0%, var(--fond) 100%);
 }
 .landing .hero::before {
   content: ''; position: absolute; top: -180px; right: -160px;
@@ -355,4 +359,31 @@
 
 @media (prefers-reduced-motion: reduce) {
   .landing * { transition: none !important; }
+}
+
+/* ═══════════════════════════════════════
+   FONDS DE SECTIONS — réchauffer la page (ajout)
+═══════════════════════════════════════ */
+
+/* Catégories : carte douce sur fond lavande clair */
+.landing #categories {
+  background: var(--fond-doux);
+  border-top: 1px solid var(--bordure);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.landing #confiance {
+  background: linear-gradient(180deg, var(--blanc) 0%, var(--fond) 100%);
+}
+
+/* Les cartes de catégories ressortent mieux sur le fond coloré */
+.landing #categories .cat-card {
+  box-shadow: 0 4px 16px rgba(0,0,80,0.05);
+}
+
+/* Bande stats : un peu d'air coloré autour */
+.landing .stats {
+  position: relative;
+  padding-top: 36px;
+  padding-bottom: 36px;
 }
