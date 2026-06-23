@@ -1,256 +1,281 @@
-import './landing.css'
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import LandingNav from '@/components/LandingNav'
+import {
+  BookOpen, Clock, Search, HeartPulse, Baby, Briefcase,
+  FileText, ShieldCheck, Layers, CheckCircle2, X, Home,
+} from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
+import PropositionBox from '@/components/PropositionBox'
+import Footer from '@/components/Footer'
+import BoutonHaut from '@/components/BoutonHaut'
 
-// Régénère la page périodiquement (ISR) pour refléter les ajouts depuis l'admin
-// sans dépendre d'un redéploiement.
-export const revalidate = 60
-
-// Icône SVG par catégorie (réutilisées de l'ancienne landing).
-const ICONES = {
-  Santé: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-  ),
-  Famille: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-  ),
-  Emploi: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-  ),
-  Fiscalité: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-  ),
-  Sécurité: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-  ),
+const ICONS = {
+  Santé:     <HeartPulse size={22} />,
+  Famille:   <Baby size={22} />,
+  Emploi:    <Briefcase size={22} />,
+  Fiscalité: <FileText size={22} />,
+  Sécurité:  <ShieldCheck size={22} />,
 }
 
-// Classe couleur (définie dans landing.css) par catégorie.
-const COULEUR_CLASSE = {
-  Santé: 'icon-red',
-  Famille: 'icon-amber',
-  Emploi: 'icon-indigo',
-  Fiscalité: 'icon-green',
-  Sécurité: 'icon-blue',
+const COULEURS = {
+  Santé:     '#0d6efd',
+  Famille:   '#6f42c1',
+  Emploi:    '#e63946',
+  Fiscalité: '#2a9d8f',
+  Sécurité:  '#f4a261',
 }
 
-const ICONE_DEFAUT = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
-)
-
-// Déduit le nom d'organisme depuis l'URL officielle (ex: ameli.fr → Ameli).
-function organismeDepuisLien(lien) {
-  if (!lien) return null
+// Lit la progression sauvegardée localement pour afficher un badge sur la carte.
+function lireProgression(id) {
+  if (typeof window === 'undefined') return 0
   try {
-    const hote = new URL(lien).hostname.replace(/^www\./, '')
-    return hote.split('.')[0]
-  } catch {
-    return null
-  }
+    const brut = window.localStorage.getItem(`progression_tutoriel_${id}`)
+    const arr = brut ? JSON.parse(brut) : []
+    return Array.isArray(arr) ? arr.length : 0
+  } catch { return 0 }
 }
 
-export const metadata = {
-  title: 'Démarches administratives — Guides pas à pas · Site non officiel',
-  description: "Guides pas à pas pour vos démarches administratives en ligne : Ameli, CAF, France Travail. Gratuit, sans inscription.",
-}
+export default function TutorielsPage() {
+  const [tutoriels, setTutoriels]       = useState([])
+  const [recherche, setRecherche]       = useState(() => {
+    if (typeof window === 'undefined') return ''
+    return new URLSearchParams(window.location.search).get('q') || ''
+  })
+  const [categorieActive, setCategorieActive] = useState('Toutes')
+  const [chargement, setChargement]     = useState(true)
+  const [progressions, setProgressions] = useState({}) // { [id]: nbEtapesFaites }
+  const champRechercheRef = useRef(null)
 
-export default async function AccueilPage() {
-  const { data } = await supabase
-    .from('tutoriels')
-    .select('id, titre, categorie, duree, description, lien')
-    .order('id')
+  // Raccourci clavier : « / » met le focus sur la recherche.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault()
+        champRechercheRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
-  const tutoriels = data ?? []
+  useEffect(() => {
+    supabase
+      .from('tutoriels')
+      .select('*')
+      .order('id')
+      .then(({ data }) => {
+        const liste = data ?? []
+        setTutoriels(liste)
+        // Charge les progressions locales une fois les tutoriels connus.
+        const map = {}
+        liste.forEach(t => { map[t.id] = lireProgression(t.id) })
+        setProgressions(map)
+        setChargement(false)
+      })
+  }, [])
 
-  // Statistiques calculées en direct depuis la base.
-  const nbGuides = tutoriels.length
-  const nbOrganismes = new Set(
-    tutoriels.map(t => organismeDepuisLien(t.lien)).filter(Boolean)
-  ).size
+  // Catégories réellement présentes dans les données.
+  const categories = ['Toutes', ...Array.from(new Set(tutoriels.map(t => t.categorie).filter(Boolean)))]
 
-  // On met en avant les premiers guides sur l'accueil.
-  const guidesEnAvant = tutoriels.slice(0, 6)
+  const resultats = tutoriels.filter(t => {
+    const q = recherche.toLowerCase()
+    const correspondRecherche =
+      t.titre.toLowerCase().includes(q) ||
+      t.categorie?.toLowerCase().includes(q) ||
+      t.description?.toLowerCase().includes(q)
+    const correspondCategorie = categorieActive === 'Toutes' || t.categorie === categorieActive
+    return correspondRecherche && correspondCategorie
+  })
 
   return (
-    <>
-      <LandingNav />
+    <main className="min-h-screen bg-[#f8f9fc]" style={{ fontFamily: "'Source Sans 3', 'Trebuchet MS', sans-serif" }}>
 
-      <main>
-
-        <section className="hero">
-          <article className="hero-inner">
-            <header>
-              <p className="hero-tag">
-                <span className="hero-tag-dot" />
-                Gratuit · Sans inscription · Accessible
-              </p>
-              <h1>Vos démarches<br />administratives,<br /><em>site non officiel.</em></h1>
-              <p className="hero-p">
-                CAF, Ameli, France Travail. Des guides pas à pas pour vous
-                accompagner de la préparation des documents jusqu&apos;au site officiel.
-              </p>
-              <nav className="hero-btns">
-                <Link href="/tutoriels" className="btn-primary">Choisir mon guide →</Link>
-                <a href="#comment" className="btn-secondary">Comment ça marche</a>
-              </nav>
-            </header>
-          </article>
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-10">
+        <section className="w-full px-6 sm:px-8 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm" style={{ background: 'linear-gradient(135deg,#000091,#1a1aa8)' }}>
+              <BookOpen size={18} />
+            </span>
+            <span className="font-black text-[#000091] text-lg leading-none">
+              Les guides
+              <span className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-0.5">Démarches administratives</span>
+            </span>
+          </Link>
+          <Link href="/" className="flex items-center gap-1.5 text-sm font-bold text-[#000091] hover:underline">
+            <Home size={15} /> Accueil
+          </Link>
         </section>
+      </nav>
 
-        <aside className="proof">
-          <ul className="proof-inner">
-            <li className="proof-item">
-              <strong className="proof-num">{nbGuides}</strong>
-              <span className="proof-label">Guide{nbGuides > 1 ? 's' : ''} disponible{nbGuides > 1 ? 's' : ''}</span>
-            </li>
-            <li className="proof-item">
-              <strong className="proof-num">{nbOrganismes || nbGuides}</strong>
-              <span className="proof-label">Organismes couverts</span>
-            </li>
-            <li className="proof-item">
-              <strong className="proof-num">0 €</strong>
-              <span className="proof-label">Coût pour l&apos;utilisateur</span>
-            </li>
-            <li className="proof-item">
-              <strong className="proof-num">0</strong>
-              <span className="proof-label">Donnée collectée</span>
-            </li>
-          </ul>
-        </aside>
+      <header className="bg-[#000091] text-white py-10 px-4">
+        <section className="max-w-5xl mx-auto">
+          <h1 className="text-3xl font-black mb-1">Guides</h1>
+          <p className="text-white/70">Guides pas à pas pour vos démarches administratives en ligne.</p>
+          <label className="mt-5 relative max-w-md flex items-center">
+            <Search size={16} className="absolute left-3 text-slate-400" />
+            <input
+              ref={champRechercheRef}
+              type="text"
+              placeholder="Rechercher un guide..."
+              value={recherche}
+              onChange={e => setRecherche(e.target.value)}
+              className="w-full pl-9 pr-20 py-2.5 rounded-xl text-sm text-slate-800 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000091]"
+            />
+            {recherche ? (
+              <button
+                type="button"
+                onClick={() => { setRecherche(''); champRechercheRef.current?.focus() }}
+                aria-label="Effacer la recherche"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            ) : (
+              <kbd className="absolute right-3 hidden sm:flex items-center justify-center w-5 h-5 rounded border border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-400">/</kbd>
+            )}
+          </label>
+        </section>
+      </header>
 
-        <section className="section" id="guides">
-          <header className="section-inner guides-header">
-            <hgroup>
-              <span className="section-label">Les guides</span>
-              <h2 className="section-h2">Quelle démarche<br /><em>vous concerne ?</em></h2>
-            </hgroup>
-            <Link href="/tutoriels" className="guides-link">Voir tous les guides →</Link>
-          </header>
+      <section className="max-w-5xl mx-auto px-4 py-8">
 
-          <ul className="guides-grid section-inner">
-            {guidesEnAvant.map(t => (
-              <li key={t.id}>
-                <Link href={`/tutoriels/${t.id}`} className="guide-card">
-                  <span className={`guide-icon-wrap ${COULEUR_CLASSE[t.categorie] ?? 'icon-indigo'}`}>
-                    {ICONES[t.categorie] ?? ICONE_DEFAUT}
-                  </span>
-                  <span className="guide-cat">{t.categorie}</span>
-                  <h3>{t.titre}</h3>
-                  <p>{t.description}</p>
-                  <footer className="guide-meta">
-                    {t.duree && <mark className="guide-badge badge-time">{t.duree}</mark>}
-                  </footer>
-                  <span className="guide-go">Commencer →</span>
-                </Link>
+        {/* Filtres par catégorie */}
+        {!chargement && categories.length > 1 && (
+          <nav className="flex flex-wrap gap-2 mb-6">
+            {categories.map(cat => {
+              const active = cat === categorieActive
+              const couleur = cat === 'Toutes' ? '#000091' : (COULEURS[cat] ?? '#000091')
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setCategorieActive(cat)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+                    active ? 'text-white border-transparent' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  }`}
+                  style={active ? { backgroundColor: couleur } : {}}
+                >
+                  {cat === 'Toutes'
+                    ? <Layers size={15} />
+                    : <span className={active ? 'text-white' : ''} style={!active ? { color: couleur } : {}}>{ICONS[cat] ?? <FileText size={15} />}</span>
+                  }
+                  {cat}
+                </button>
+              )
+            })}
+          </nav>
+        )}
+
+        {/* Compteur de résultats */}
+        {!chargement && (
+          <p className="text-sm text-slate-400 mb-4">
+            {resultats.length} guide{resultats.length > 1 ? 's' : ''}
+            {categorieActive !== 'Toutes' && <> dans <span className="font-semibold text-slate-500">{categorieActive}</span></>}
+          </p>
+        )}
+
+        {chargement && (
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 list-none p-0">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <li key={i} className="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse">
+                <span className="block h-1.5 rounded-full bg-slate-200 mb-5 w-full" />
+                <span className="block h-3 bg-slate-100 rounded w-1/3 mb-2" />
+                <span className="block h-5 bg-slate-200 rounded w-3/4 mb-3" />
+                <span className="block h-3 bg-slate-100 rounded w-full mb-1" />
+                <span className="block h-3 bg-slate-100 rounded w-2/3" />
               </li>
             ))}
           </ul>
-        </section>
+        )}
 
-        <section className="section" id="comment">
-          <header className="section-inner">
-            <span className="section-label">Fonctionnement</span>
-            <h2 className="section-h2">De zéro au site officiel,<br /><em>en 4 étapes.</em></h2>
-            <p className="section-lead">Aucune inscription, aucune donnée collectée. Choisissez et avancez à votre rythme.</p>
-          </header>
+        {!chargement && resultats.length > 0 && (
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 list-none p-0">
+            {resultats.map(t => {
+              const couleur = COULEURS[t.categorie] ?? '#000091'
+              const nbEtapes = Array.isArray(t.etapes) ? t.etapes.length : 0
+              const nbFaites = Math.min(progressions[t.id] || 0, nbEtapes)
+              const termine = nbEtapes > 0 && nbFaites === nbEtapes
+              const commence = nbFaites > 0 && !termine
+              const pourcentage = nbEtapes > 0 ? Math.round((nbFaites / nbEtapes) * 100) : 0
+              return (
+                <li key={t.id}>
+                  <Link
+                    href={`/tutoriels/${t.id}`}
+                    className="group flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full"
+                  >
+                    <span className="h-1.5 w-full block" style={{ backgroundColor: couleur }} />
+                    <article className="p-5 flex flex-col flex-1">
+                      <header className="flex items-center gap-2 mb-3">
+                        <span className="w-9 h-9 rounded-xl flex items-center justify-center text-white shrink-0" style={{ backgroundColor: couleur }}>
+                          {ICONS[t.categorie] ?? <FileText size={18} />}
+                        </span>
+                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{t.categorie}</span>
+                        {termine && (
+                          <span className="ml-auto flex items-center gap-1 text-xs font-bold text-green-600">
+                            <CheckCircle2 size={13} /> Fait
+                          </span>
+                        )}
+                      </header>
+                      <h2 className="font-extrabold text-slate-900 mb-2 group-hover:text-[#000091] transition-colors">{t.titre}</h2>
+                      <p className="text-sm text-slate-500 leading-relaxed mb-4 line-clamp-2 flex-1">{t.description}</p>
 
-          <ol className="steps section-inner">
-            <li className="step-card">
-              <header className="step-header">
-                <span className="step-num">1</span>
-                <span className="step-icon-wrap">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                </span>
-              </header>
-              <h3>Choisissez un guide</h3>
-              <p>Parcourez les guides et sélectionnez la démarche qui vous concerne.</p>
-            </li>
-            <li className="step-card">
-              <header className="step-header">
-                <span className="step-num">2</span>
-                <span className="step-icon-wrap">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13h4"/><path d="M10 17h4"/></svg>
-                </span>
-              </header>
-              <h3>Préparez vos documents</h3>
-              <p>Chaque guide commence par la liste des informations à avoir sous la main.</p>
-            </li>
-            <li className="step-card">
-              <header className="step-header">
-                <span className="step-num">3</span>
-                <span className="step-icon-wrap">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                </span>
-              </header>
-              <h3>Suivez les étapes</h3>
-              <p>Avancez pas à pas et cochez chaque action au fur et à mesure.</p>
-            </li>
-            <li className="step-card">
-              <header className="step-header">
-                <span className="step-num">4</span>
-                <span className="step-icon-wrap">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                </span>
-              </header>
-              <h3>Accédez au site officiel</h3>
-              <p>Un lien direct vous amène sur la plateforme officielle pour finaliser.</p>
-            </li>
-          </ol>
-        </section>
+                      {/* Progression en cours */}
+                      {commence && (
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] font-semibold text-slate-400">Repris : {nbFaites}/{nbEtapes}</span>
+                            <span className="text-[11px] font-bold" style={{ color: couleur }}>{pourcentage} %</span>
+                          </div>
+                          <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${pourcentage}%`, backgroundColor: couleur }} />
+                          </div>
+                        </div>
+                      )}
 
-        <section className="section" id="confiance">
-          <header className="section-inner">
-            <span className="section-label">Pourquoi faire confiance à cette plateforme</span>
-            <h2 className="section-h2">Une plateforme pensée<br /><em>pour tous les citoyens.</em></h2>
-            <p className="section-lead">Que vous soyez à l&apos;aise ou non avec le numérique, cette plateforme est faite pour vous.</p>
-          </header>
-
-          <ul className="trust-grid section-inner">
-            <li className="trust-card">
-              <span className="trust-icon icon-blue">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-              </span>
-              <h3>Contenu vérifié</h3>
-              <p>Chaque guide est basé sur les procédures officielles des organismes concernés : Ameli, CAF, France Travail.</p>
-            </li>
-            <li className="trust-card">
-              <span className="trust-icon icon-green">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
-              </span>
-              <h3>100 % gratuit</h3>
-              <p>Aucun abonnement, aucune inscription, aucune donnée personnelle collectée. Accès libre et immédiat.</p>
-            </li>
-            <li className="trust-card">
-              <span className="trust-icon icon-indigo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-              </span>
-              <h3>Accessible à tous</h3>
-              <p>Conçu pour être simple même pour les personnes peu à l&apos;aise avec le numérique. Lisible sur tous les écrans.</p>
-            </li>
-            <li className="trust-card">
-              <span className="trust-icon icon-amber">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              </span>
-              <h3>Liens officiels uniquement</h3>
-              <p>Chaque guide renvoie vers les sites gouvernementaux officiels.</p>
-            </li>
+                      <footer className="flex gap-2 flex-wrap">
+                        {t.duree && (
+                          <span className="text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-100 text-slate-500">
+                            <Clock size={10} /> {t.duree}
+                          </span>
+                        )}
+                        {nbEtapes > 0 && (
+                          <span className="text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-100 text-slate-500">
+                            <Layers size={10} /> {nbEtapes} étape{nbEtapes > 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </footer>
+                    </article>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
-        </section>
+        )}
 
-      </main>
+        {!chargement && resultats.length === 0 && (
+          <p className="text-center py-20 text-slate-400">
+            <BookOpen size={40} className="text-slate-300 mx-auto mb-4" />
+            Aucun guide {recherche && <>pour &laquo; {recherche} &raquo;</>}
+            {categorieActive !== 'Toutes' && <> dans {categorieActive}</>}
+            <button
+              onClick={() => { setRecherche(''); setCategorieActive('Toutes') }}
+              className="block mt-2 text-sm text-[#000091] hover:underline mx-auto"
+            >
+              Réinitialiser les filtres
+            </button>
+          </p>
+        )}
 
-      <footer className="footer">
-        <strong className="footer-logo">
-          <span className="footer-bar" />
-          Plateforme de démarches administratives
-        </strong>
-        <nav className="footer-links">
-          <a href="https://www.service-public.fr" target="_blank" rel="noreferrer">Service-Public.fr</a>
-          <a href="https://www.cnil.fr" target="_blank" rel="noreferrer">CNIL</a>
-        </nav>
-        <small className="footer-copy">© {new Date().getFullYear()} — Projet Titre Professionnel</small>
-      </footer>
-    </>
+        {!chargement && (
+          <section className="mt-10 max-w-lg mx-auto">
+            <PropositionBox />
+          </section>
+        )}
+      </section>
+
+      <Footer />
+      <BoutonHaut />
+    </main>
   )
 }
