@@ -1,10 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { BookOpen, Clock, Search, HeartPulse, Baby, Briefcase, FileText, ShieldCheck } from 'lucide-react'
+import {
+  BookOpen, Clock, Search, HeartPulse, Baby, Briefcase,
+  FileText, ShieldCheck, Layers, CheckCircle2, X,
+} from 'lucide-react'
 import supabase from '@/lib/supabaseClient'
 import PropositionBox from '@/components/PropositionBox'
+import Footer from '@/components/Footer'
+import BoutonHaut from '@/components/BoutonHaut'
 
 const ICONS = {
   Santé:     <HeartPulse size={22} />,
@@ -22,27 +27,63 @@ const COULEURS = {
   Sécurité:  '#f4a261',
 }
 
+// Lit la progression sauvegardée localement pour afficher un badge sur la carte.
+function lireProgression(id) {
+  if (typeof window === 'undefined') return 0
+  try {
+    const brut = window.localStorage.getItem(`progression_tutoriel_${id}`)
+    const arr = brut ? JSON.parse(brut) : []
+    return Array.isArray(arr) ? arr.length : 0
+  } catch { return 0 }
+}
 
 export default function TutorielsPage() {
-  const [tutoriels, setTutoriels]   = useState([])
-  const [recherche, setRecherche]   = useState('')
-  const [chargement, setChargement] = useState(true)
+  const [tutoriels, setTutoriels]       = useState([])
+  const [recherche, setRecherche]       = useState('')
+  const [categorieActive, setCategorieActive] = useState('Toutes')
+  const [chargement, setChargement]     = useState(true)
+  const [progressions, setProgressions] = useState({}) // { [id]: nbEtapesFaites }
+  const champRechercheRef = useRef(null)
+
+  // Raccourci clavier : « / » met le focus sur la recherche.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault()
+        champRechercheRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   useEffect(() => {
     supabase
       .from('tutoriels')
       .select('*')
       .order('id')
-      .then(({ data }) => { setTutoriels(data ?? []); setChargement(false) })
+      .then(({ data }) => {
+        const liste = data ?? []
+        setTutoriels(liste)
+        // Charge les progressions locales une fois les tutoriels connus.
+        const map = {}
+        liste.forEach(t => { map[t.id] = lireProgression(t.id) })
+        setProgressions(map)
+        setChargement(false)
+      })
   }, [])
+
+  // Catégories réellement présentes dans les données.
+  const categories = ['Toutes', ...Array.from(new Set(tutoriels.map(t => t.categorie).filter(Boolean)))]
 
   const resultats = tutoriels.filter(t => {
     const q = recherche.toLowerCase()
-    return (
+    const correspondRecherche =
       t.titre.toLowerCase().includes(q) ||
       t.categorie?.toLowerCase().includes(q) ||
       t.description?.toLowerCase().includes(q)
-    )
+    const correspondCategorie = categorieActive === 'Toutes' || t.categorie === categorieActive
+    return correspondRecherche && correspondCategorie
   })
 
   return (
@@ -65,17 +106,64 @@ export default function TutorielsPage() {
           <label className="mt-5 relative max-w-md flex items-center">
             <Search size={16} className="absolute left-3 text-slate-400" />
             <input
+              ref={champRechercheRef}
               type="text"
               placeholder="Rechercher un guide..."
               value={recherche}
               onChange={e => setRecherche(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm text-slate-800 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000091]"
+              className="w-full pl-9 pr-20 py-2.5 rounded-xl text-sm text-slate-800 bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#000091]"
             />
+            {recherche ? (
+              <button
+                type="button"
+                onClick={() => { setRecherche(''); champRechercheRef.current?.focus() }}
+                aria-label="Effacer la recherche"
+                className="absolute right-3 text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <X size={16} />
+              </button>
+            ) : (
+              <kbd className="absolute right-3 hidden sm:flex items-center justify-center w-5 h-5 rounded border border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-400">/</kbd>
+            )}
           </label>
         </section>
       </header>
 
       <section className="max-w-5xl mx-auto px-4 py-8">
+
+        {/* Filtres par catégorie */}
+        {!chargement && categories.length > 1 && (
+          <nav className="flex flex-wrap gap-2 mb-6">
+            {categories.map(cat => {
+              const active = cat === categorieActive
+              const couleur = cat === 'Toutes' ? '#000091' : (COULEURS[cat] ?? '#000091')
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setCategorieActive(cat)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+                    active ? 'text-white border-transparent' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                  }`}
+                  style={active ? { backgroundColor: couleur } : {}}
+                >
+                  {cat === 'Toutes'
+                    ? <Layers size={15} />
+                    : <span className={active ? 'text-white' : ''} style={!active ? { color: couleur } : {}}>{ICONS[cat] ?? <FileText size={15} />}</span>
+                  }
+                  {cat}
+                </button>
+              )
+            })}
+          </nav>
+        )}
+
+        {/* Compteur de résultats */}
+        {!chargement && (
+          <p className="text-sm text-slate-400 mb-4">
+            {resultats.length} guide{resultats.length > 1 ? 's' : ''}
+            {categorieActive !== 'Toutes' && <> dans <span className="font-semibold text-slate-500">{categorieActive}</span></>}
+          </p>
+        )}
 
         {chargement && (
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 list-none p-0">
@@ -95,6 +183,11 @@ export default function TutorielsPage() {
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 list-none p-0">
             {resultats.map(t => {
               const couleur = COULEURS[t.categorie] ?? '#000091'
+              const nbEtapes = Array.isArray(t.etapes) ? t.etapes.length : 0
+              const nbFaites = Math.min(progressions[t.id] || 0, nbEtapes)
+              const termine = nbEtapes > 0 && nbFaites === nbEtapes
+              const commence = nbFaites > 0 && !termine
+              const pourcentage = nbEtapes > 0 ? Math.round((nbFaites / nbEtapes) * 100) : 0
               return (
                 <li key={t.id}>
                   <Link
@@ -108,13 +201,37 @@ export default function TutorielsPage() {
                           {ICONS[t.categorie] ?? <FileText size={18} />}
                         </span>
                         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{t.categorie}</span>
+                        {termine && (
+                          <span className="ml-auto flex items-center gap-1 text-xs font-bold text-green-600">
+                            <CheckCircle2 size={13} /> Fait
+                          </span>
+                        )}
                       </header>
                       <h2 className="font-extrabold text-slate-900 mb-2 group-hover:text-[#000091] transition-colors">{t.titre}</h2>
                       <p className="text-sm text-slate-500 leading-relaxed mb-4 line-clamp-2 flex-1">{t.description}</p>
+
+                      {/* Progression en cours */}
+                      {commence && (
+                        <div className="mb-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[11px] font-semibold text-slate-400">Repris : {nbFaites}/{nbEtapes}</span>
+                            <span className="text-[11px] font-bold" style={{ color: couleur }}>{pourcentage} %</span>
+                          </div>
+                          <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                            <div className="h-full rounded-full" style={{ width: `${pourcentage}%`, backgroundColor: couleur }} />
+                          </div>
+                        </div>
+                      )}
+
                       <footer className="flex gap-2 flex-wrap">
                         {t.duree && (
                           <span className="text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-100 text-slate-500">
                             <Clock size={10} /> {t.duree}
+                          </span>
+                        )}
+                        {nbEtapes > 0 && (
+                          <span className="text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 bg-slate-100 text-slate-500">
+                            <Layers size={10} /> {nbEtapes} étape{nbEtapes > 1 ? 's' : ''}
                           </span>
                         )}
                       </footer>
@@ -129,20 +246,26 @@ export default function TutorielsPage() {
         {!chargement && resultats.length === 0 && (
           <p className="text-center py-20 text-slate-400">
             <BookOpen size={40} className="text-slate-300 mx-auto mb-4" />
-            Aucun guide pour "{recherche}"
-            <button onClick={() => setRecherche('')} className="block mt-2 text-sm text-[#000091] hover:underline mx-auto">
-              Effacer la recherche
+            Aucun guide {recherche && <>pour &laquo; {recherche} &raquo;</>}
+            {categorieActive !== 'Toutes' && <> dans {categorieActive}</>}
+            <button
+              onClick={() => { setRecherche(''); setCategorieActive('Toutes') }}
+              className="block mt-2 text-sm text-[#000091] hover:underline mx-auto"
+            >
+              Réinitialiser les filtres
             </button>
           </p>
         )}
 
-        {/* Proposition de tutoriel */}
         {!chargement && (
           <section className="mt-10 max-w-lg mx-auto">
             <PropositionBox />
           </section>
         )}
       </section>
+
+      <Footer />
+      <BoutonHaut />
     </main>
   )
 }
