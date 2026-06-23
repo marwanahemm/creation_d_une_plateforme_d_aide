@@ -43,16 +43,16 @@
 /* ════════ NAVIGATION ════════ */
 .landing .nav {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(244, 246, 255, 0.85);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--bordure);
 }
 .landing .nav-inner {
-  max-width: var(--max); margin: 0 auto;
-  height: var(--nav-h); padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; margin: 0;
+  height: var(--nav-h); padding: 0 32px;
+  display: flex; align-items: center; gap: 24px;
 }
-.landing .nav-logo { display: flex; align-items: center; gap: 12px; }
+.landing .nav-logo { display: flex; align-items: center; gap: 12px; margin-right: auto; }
 .landing .nav-logo-icon {
   width: 42px; height: 42px; border-radius: 13px;
   background: linear-gradient(135deg, var(--bleu), var(--bleu-clair));
@@ -69,7 +69,7 @@
   font-size: .68rem; font-weight: 600; color: var(--gris-clair);
   letter-spacing: .01em; margin-top: 2px; text-transform: none;
 }
-.landing .nav-links { display: flex; align-items: center; gap: 30px; }
+.landing .nav-links { display: flex; align-items: center; gap: 30px; margin: 0 auto; }
 .landing .nav-link {
   font-size: .92rem; font-weight: 600; color: var(--gris);
   position: relative; transition: color .2s;
@@ -372,6 +372,7 @@
   border-bottom: 1px solid var(--bordure);
 }
 
+/* Confiance : fond bleuté très léger pour ne pas finir sur du blanc plat */
 .landing #confiance {
   background: linear-gradient(180deg, var(--blanc) 0%, var(--fond) 100%);
 }

@@ -23,8 +23,13 @@ export default function LandingNav() {
       <nav className={`nav${scrolled ? ' scrolled' : ''}`} id="navbar">
         <header className="nav-inner">
           <a href="#" className="nav-logo">
-            <span className="nav-logo-bar" />
-            Plateforme de démarches administratives
+            <span className="nav-logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </span>
+            <span className="nav-logo-text">
+              Plateforme d&apos;aide administrative
+              <small>Guides pas à pas, gratuits</small>
+            </span>
           </a>
 
           <ul className="nav-links">

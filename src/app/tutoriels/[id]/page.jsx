@@ -177,7 +177,7 @@ export default function TutorielDetailPage({ params }) {
 
       {/* ── Bandeau coloré du guide ── */}
       <header className="relative overflow-hidden" style={{ background: `radial-gradient(ellipse 70% 90% at 50% -30%, ${col.c}1f, transparent 60%), linear-gradient(180deg,#eaf0ff,#eef1fb)` }}>
-        <div className="max-w-3xl mx-auto px-5 pt-6 pb-2">
+        <div className="max-w-6xl mx-auto px-5 pt-6 pb-2">
           <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm text-[#8a8a9a] mb-5 flex-wrap">
             <Link href="/" className="flex items-center gap-1 hover:text-[#000091] transition-colors"><Home size={14} /> Accueil</Link>
             <ChevronRight size={13} />
@@ -188,15 +188,18 @@ export default function TutorielDetailPage({ params }) {
         </div>
       </header>
 
-      <article className="max-w-3xl mx-auto px-5 pb-10">
+      <div className="max-w-6xl mx-auto px-5 pb-10 grid gap-5 lg:grid-cols-[minmax(320px,400px)_1fr] items-start">
+
+        {/* ════ COLONNE GAUCHE : en-tête + infos + sommaire ════ */}
+        <div className="flex flex-col gap-5 lg:sticky lg:top-20">
 
         {/* ── En-tête du guide ── */}
-        <header className="bg-white rounded-2xl p-6 mb-5 -mt-1" style={{ border: '1px solid #e8e8f0', boxShadow: '0 8px 30px rgba(0,0,80,0.06)' }}>
+        <header className="bg-white rounded-2xl p-6 -mt-1" style={{ border: '1px solid #e8e8f0', boxShadow: '0 8px 30px rgba(0,0,80,0.06)' }}>
           <div className="flex items-center gap-3 flex-wrap mb-3">
             <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide" style={{ background: col.bg, color: col.c }}>{categorie}</span>
             {duree && <span className="flex items-center gap-1 text-xs font-semibold text-[#8a8a9a]"><Clock size={12} /> {duree}</span>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#1a1a2e] tracking-tight">{titre}</h1>
+          <h1 className="text-2xl font-black text-[#1a1a2e] tracking-tight">{titre}</h1>
 
           {nbEtapes > 0 && (
             <div className="mt-5">
@@ -220,7 +223,7 @@ export default function TutorielDetailPage({ params }) {
 
         {/* ── Infos ── */}
         {infos?.length > 0 && (
-          <aside className="rounded-2xl p-5 mb-5" style={{ background: col.bg, border: `1px solid ${col.c}22` }}>
+          <aside className="rounded-2xl p-5" style={{ background: col.bg, border: `1px solid ${col.c}22` }}>
             <h2 className="flex items-center gap-2 text-sm font-black mb-3" style={{ color: col.c }}>
               <Info size={15} /> À savoir avant de commencer
             </h2>
@@ -237,7 +240,7 @@ export default function TutorielDetailPage({ params }) {
 
         {/* ── Sommaire ── */}
         {nbEtapes > 1 && (
-          <nav className="bg-white rounded-2xl p-4 mb-5" style={{ border: '1px solid #e8e8f0' }}>
+          <nav className="bg-white rounded-2xl p-4 lg:max-h-[50vh] lg:overflow-auto" style={{ border: '1px solid #e8e8f0' }}>
             <p className="text-xs font-bold uppercase tracking-wide text-[#8a8a9a] mb-2 px-1">Les étapes</p>
             <ol className="flex flex-col gap-0.5 list-none p-0 m-0">
               {etapes.map((etape, index) => {
@@ -261,6 +264,11 @@ export default function TutorielDetailPage({ params }) {
             </ol>
           </nav>
         )}
+
+        </div>{/* ════ fin colonne gauche ════ */}
+
+        {/* ════ COLONNE DROITE : étape active + fin + feedback ════ */}
+        <div className="flex flex-col gap-5 min-w-0">
 
         {/* ── Étape active ── */}
         {nbEtapes > 0 && (
@@ -329,7 +337,9 @@ export default function TutorielDetailPage({ params }) {
         )}
 
         <FeedbackBox tutorielId={tutoriel.id} couleur={col.c} />
-      </article>
+
+        </div>{/* ════ fin colonne droite ════ */}
+      </div>{/* ════ fin grille ════ */}
 
       <Footer />
       <BoutonHaut />
