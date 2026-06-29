@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import supabase from "@/lib/supabaseClient"
 import {
   Trash2, Plus, LogOut, Lock, Eye, EyeOff,
   FileText, Pencil, X, ThumbsUp, ThumbsDown, LayoutDashboard, Lightbulb,
@@ -15,6 +14,19 @@ const FORMULAIRE_VIDE = {
 }
 
 const classeInput = "w-full p-2.5 border-2 border-[#e5e7eb] rounded-lg text-sm text-[#161616] placeholder:text-[#aaa] outline-none focus:border-[#000091] transition-colors bg-white"
+
+function couleurCategorie(categorie) {
+  const c = (categorie || "").toLowerCase()
+  if (c.includes("sant"))       return { bar: "#0d9488", bg: "#ccfbf1", text: "#0f766e" }
+  if (c.includes("famille"))    return { bar: "#7c3aed", bg: "#ede9fe", text: "#6d28d9" }
+  if (c.includes("emploi"))     return { bar: "#ea580c", bg: "#ffedd5", text: "#c2410c" }
+  if (c.includes("fiscal"))     return { bar: "#16a34a", bg: "#dcfce7", text: "#15803d" }
+  if (c.includes("quotidien"))  return { bar: "#0891b2", bg: "#cffafe", text: "#0e7490" }
+  if (c.includes("sécurit")) return { bar: "#d97706", bg: "#fef3c7", text: "#b45309" }
+  if (c.includes("logement"))   return { bar: "#db2777", bg: "#fce7f3", text: "#be185d" }
+  if (c.includes("retraite"))   return { bar: "#6366f1", bg: "#e0e7ff", text: "#4338ca" }
+  return { bar: "#000091", bg: "#f5f5fe", text: "#000091" }
+}
 
 export default function AdminPage() {
   const [estConnecte, setEstConnecte]     = useState(false)
@@ -63,11 +75,13 @@ export default function AdminPage() {
 
   async function chargerTutoriels() {
     setChargement(true)
-    const { data } = await supabase
-      .from("tutoriels")
-      .select("id, titre, categorie, duree, description, lien, infos, etapes")
-      .order("created_at", { ascending: false })
-    setTutoriels(data || [])
+    try {
+      const res = await fetch("/api/admin/tutoriels")
+      if (res.ok) {
+        const d = await res.json()
+        setTutoriels(d.tutoriels || [])
+      }
+    } catch (e) { console.error("Erreur chargement tutoriels :", e) }
     setChargement(false)
   }
 
@@ -93,8 +107,12 @@ export default function AdminPage() {
 
   async function supprimerTutoriel(id, titre) {
     if (!confirm(`Supprimer "${titre}" ?`)) return
-    const { error } = await supabase.from("tutoriels").delete().eq("id", id)
-    if (!error) setTutoriels(tutoriels.filter(t => t.id !== id))
+    const res = await fetch("/api/admin/tutoriels", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+    if (res.ok) setTutoriels(tutoriels.filter(t => t.id !== id))
   }
 
   function ouvrirEdition(tutoriel) {
@@ -144,13 +162,12 @@ export default function AdminPage() {
       etapes:      etapesTableau,
     }
 
-    let erreur
-    if (idEnEdition) {
-      ({ error: erreur } = await supabase.from("tutoriels").update(donnees).eq("id", idEnEdition))
-    } else {
-      ({ error: erreur } = await supabase.from("tutoriels").insert(donnees))
-    }
-    if (!erreur) { fermerFormulaire(); chargerTutoriels() }
+    const res = await fetch("/api/admin/tutoriels", {
+      method: idEnEdition ? "PUT" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(idEnEdition ? { id: idEnEdition, ...donnees } : donnees),
+    })
+    if (res.ok) { fermerFormulaire(); chargerTutoriels() }
   }
 
   if (verification) return (
@@ -329,26 +346,51 @@ export default function AdminPage() {
           <ul className="flex flex-col gap-2 list-none p-0">
             {tutoriels.map(tutoriel => {
               const feedbackTutoriel = statistiquesFeedbacks[tutoriel.id]
+              const couleur = couleurCategorie(tutoriel.categorie)
+              const nbEtapes = Array.isArray(tutoriel.etapes) ? tutoriel.etapes.length : 0
               return (
-                <li key={tutoriel.id} className={`bg-white rounded-[10px] px-5 py-4 flex items-center justify-between gap-4 ${idEnEdition === tutoriel.id ? "border-2 border-[#000091]" : "border border-[#e5e7eb]"}`}>
-                  <article className="flex-1">
-                    <p className="text-sm font-bold text-[#161616]">{tutoriel.titre}</p>
-                    <p className="text-xs text-[#555] mt-0.5">{tutoriel.categorie} · {tutoriel.duree}</p>
-                    {feedbackTutoriel && (
-                      <span className="flex items-center gap-3 mt-2">
-                        <span className="flex items-center gap-1 text-xs font-semibold text-green-600"><ThumbsUp size={12} /> {feedbackTutoriel.positifs || 0}</span>
-                        <span className="flex items-center gap-1 text-xs font-semibold text-red-500"><ThumbsDown size={12} /> {feedbackTutoriel.negatifs || 0}</span>
+                <li
+                  key={tutoriel.id}
+                  className={`bg-white rounded-xl flex items-stretch overflow-hidden shadow-sm ${idEnEdition === tutoriel.id ? "border-2 border-[#000091]" : "border border-[#e5e7eb]"}`}
+                >
+                  <span className="w-1.5 shrink-0" style={{ background: couleur.bar }} />
+                  <article className="flex-1 flex items-center justify-between gap-4 px-5 py-4">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-[#161616]">
+                        {tutoriel.titre || <em className="text-[#aaa] font-normal">Sans titre</em>}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        {tutoriel.categorie && (
+                          <span
+                            className="text-xs font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-full"
+                            style={{ background: couleur.bg, color: couleur.text }}
+                          >
+                            {tutoriel.categorie}
+                          </span>
+                        )}
+                        <span className="text-xs text-[#888]">
+                          {tutoriel.duree && `· ${tutoriel.duree}`}
+                          {nbEtapes > 0 && ` · ${nbEtapes} étape${nbEtapes > 1 ? "s" : ""}`}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 shrink-0">
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-green-600">
+                        <ThumbsUp size={15} /> {feedbackTutoriel?.positifs || 0}
                       </span>
-                    )}
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-red-500">
+                        <ThumbsDown size={15} /> {feedbackTutoriel?.negatifs || 0}
+                      </span>
+                      <nav className="flex gap-2">
+                        <button onClick={() => ouvrirEdition(tutoriel)} className="flex items-center gap-1.5 border border-[#e5e7eb] rounded-lg px-3 py-2 text-xs font-bold text-[#000091] hover:bg-[#f5f5fe] cursor-pointer transition-colors">
+                          <Pencil size={13} /> Modifier
+                        </button>
+                        <button onClick={() => supprimerTutoriel(tutoriel.id, tutoriel.titre)} className="flex items-center gap-1.5 border border-[#fecaca] rounded-lg px-3 py-2 text-xs font-bold text-[#dc2626] hover:bg-[#fef2f2] cursor-pointer transition-colors">
+                          <Trash2 size={13} /> Supprimer
+                        </button>
+                      </nav>
+                    </div>
                   </article>
-                  <nav className="flex gap-2">
-                    <button onClick={() => ouvrirEdition(tutoriel)} className="flex items-center gap-1 border border-[#e5e7eb] rounded-lg px-3 py-2 text-xs font-semibold text-[#000091] hover:bg-[#f5f5fe] cursor-pointer">
-                      <Pencil size={14} /> Modifier
-                    </button>
-                    <button onClick={() => supprimerTutoriel(tutoriel.id, tutoriel.titre)} className="flex items-center gap-1 border border-[#fecaca] rounded-lg px-3 py-2 text-xs font-semibold text-[#dc2626] hover:bg-[#fef2f2] cursor-pointer">
-                      <Trash2 size={14} /> Supprimer
-                    </button>
-                  </nav>
                 </li>
               )
             })}
