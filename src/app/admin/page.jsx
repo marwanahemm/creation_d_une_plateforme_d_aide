@@ -268,13 +268,13 @@ export default function AdminPage() {
 
             <fieldset className="grid grid-cols-2 gap-4 mb-4 border-0 p-0 m-0">
               <label className="block">
-                <span className="block text-xs font-semibold text-[#161616] mb-1">Titre *</span>
-                <input required value={formulaire.titre} onChange={e => setFormulaire({...formulaire, titre: e.target.value})}
+                <span className="block text-xs font-semibold text-[#161616] mb-1">Titre</span>
+                <input value={formulaire.titre} onChange={e => setFormulaire({...formulaire, titre: e.target.value})}
                   placeholder="Ex : Ameli - Assurance Maladie" className={classeInput} />
               </label>
               <label className="block">
-                <span className="block text-xs font-semibold text-[#161616] mb-1">Catégorie *</span>
-                <input required value={formulaire.categorie} onChange={e => setFormulaire({...formulaire, categorie: e.target.value})}
+                <span className="block text-xs font-semibold text-[#161616] mb-1">Catégorie</span>
+                <input value={formulaire.categorie} onChange={e => setFormulaire({...formulaire, categorie: e.target.value})}
                   placeholder="Ex : Santé" className={classeInput} />
               </label>
             </fieldset>
